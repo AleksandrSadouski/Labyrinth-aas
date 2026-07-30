@@ -16,7 +16,7 @@ class AuthController extends Controller
     {
         $name = $request->input('name');
         $password = $request->input('password');
-        $profile = Profile::where('name', $name)->first();
+        $profile = Profile::with('player')->where('name', $name)->first();
         if (!$profile || !Hash::check($password, $profile->password))
             {
                 return response()->json(['status' => 'error', 
@@ -27,7 +27,7 @@ class AuthController extends Controller
         return response()->json(['status' => 'success',
         'message' => 'Successful login to profile',
         'data' => new ProfileResource($profile), 
-        'token' => $token]);     
+        'token' => $token, 200]);     
     }
     
     public function registerProfile(RegisterRequest $request)
@@ -42,6 +42,6 @@ class AuthController extends Controller
         return response()->json(['status' => 'success',
         'message' => 'Successful profile creation',
         'data' => new ProfileResource($profile), 
-        'token' => $token]);
+        'token' => $token, 200]);
     }
 }

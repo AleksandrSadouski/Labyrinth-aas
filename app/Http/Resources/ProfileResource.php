@@ -14,6 +14,7 @@ class ProfileResource extends JsonResource
         'rating' => $this->rating,
         'win_total' => $this->win_total,
         'draw_total' => $this->draw_total,
-        'lose_total' => $this->lose_total];
+        'lose_total' => $this->lose_total,
+        'player' = new PlayerResource($this->whenLoaded('player'))];
     }
 }
