@@ -9,6 +9,8 @@ use App\Models\Room;
 use App\Services\MazeService;
 use App\Services\CodeGeneratorService;
 use App\Http\Resources\RoomResource;
+use App\Http\Requests\JoinRoomRequest;
+use App\Http\Requests\CreateRoomRequest;
 
 class MenuController extends Controller
 {
@@ -19,7 +21,7 @@ class MenuController extends Controller
         'message' => 'Player log out'], 200);
     }
 
-    public function createRoom(Request $request)
+    public function createRoom(CreateRoomRequest $request)
     {
         $profile = $request->user();
         $player = new Player();
@@ -45,7 +47,6 @@ class MenuController extends Controller
         $player->player_order = 1;
         $player->x = $room->entry_x;
         $player->y = $room->entry_y;
-
         $player->room_id = $room->id;
         $player->save();
 
@@ -55,7 +56,7 @@ class MenuController extends Controller
         'data' => new RoomResource($room)], 200);
     }
 
-    public function joinRoom(Request $request)
+    public function joinRoom(JoinRoomRequest $request)
     {
         $profile = $request->user();
         $player = new Player();
