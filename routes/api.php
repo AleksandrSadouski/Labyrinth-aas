@@ -13,5 +13,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/game/moves', [GameController::class, 'makeMove']);
     Route::post('/game/exit', [GameController::class, 'exitRoom']);
+    Route::post('/game/cancel', [GameController::class, 'cancelRoom']);
     Route::get('/poll', [GameController::class, 'checkRoom']);
 });
