@@ -11,8 +11,8 @@ class CodeGeneratorService
         for ($i = 0; $i < 6; $i++)
         {
         $randIndex = random_int(0, strlen($bukvar) - 1);
-        $this->roomCode = $roomCode . $this->bukvar[$randIndex];
+        $this->roomCode = $this->roomCode . $this->bukvar[$randIndex];
         }
-        return $roomCode;
+        return $this->roomCode;
     }
 }

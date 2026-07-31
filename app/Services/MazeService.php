@@ -15,6 +15,7 @@ class MazeService
         $this->size = $size;
         $this->branchWeight = $branchWeight;
         $this->hallwayWeight = $hallwayWeight;
+        $this->maze = [];
         
         $this->steny();
         $this->generateMazeGrowingTree();

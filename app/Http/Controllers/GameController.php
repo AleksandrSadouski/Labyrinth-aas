@@ -17,11 +17,10 @@ class GameController extends Controller
         $newX = $request->input('new_x');
         $newY = $request->input('new_y');
 
-        $roomCode = $request->input('code');
         $room = Room::with('players')->where('code', $roomCode)->first();
         if(!$room)
             {
-                response()->json(['status' => 'error',
+                return response()->json(['status' => 'error',
                 'message' => 'Code wasnt transmitted'], 404);
             }
 
@@ -29,13 +28,13 @@ class GameController extends Controller
 
         if($room->status != 'active')
             {
-                response()->json(['status' => 'error',
+                return response()->json(['status' => 'error',
                 'message' => 'Game is not active'], 409);  
             }
 
         if ($player->player_order != $room->current_turn)
             {
-                response()->json(['status' => 'error',
+                return response()->json(['status' => 'error',
                 'message' => 'Its not your move now'], 409); 
             }
         
@@ -43,12 +42,13 @@ class GameController extends Controller
         
         if ($maze[$newY][$newX] != 0)
             {
-                response()->json(['status' => 'error',
+                return response()->json(['status' => 'error',
                 'message' => 'Theres a wall there'], 409); 
             }
 
         $player->x = $newX;
         $player->y = $newY;
+        $player->save();
 
         if($newY == $room->exit_y && $newX == $room->exit_x)
             {
@@ -86,7 +86,7 @@ class GameController extends Controller
         $room = Room::with('players')->where('code', $roomCode)->first();
         if(!$room)
             {
-                response()->json(['status' => 'error',
+                return response()->json(['status' => 'error',
                 'message' => 'Code wasnt transmitted'], 404);
             }
         
@@ -104,7 +104,7 @@ class GameController extends Controller
         
         $room->players()->where('id', $player->id)->delete();
 
-        if($room->players->count == 0)
+        if($room->players->count() == 0)
             {
                 $room->delete();
             }
@@ -119,7 +119,7 @@ class GameController extends Controller
         $room = Room::with('players')->where('code', $roomCode)->first();
         if(!$room)
             {
-                response()->json(['status' => 'error',
+                return response()->json(['status' => 'error',
                 'message' => 'Code wasnt transmitted'], 404);
             }
         
@@ -145,7 +145,7 @@ class GameController extends Controller
         $room = Room::with('players')->where('code', $roomCode)->first();
         if(!$room)
             {
-                response()->json(['status' => 'error',
+                return response()->json(['status' => 'error',
                 'message' => 'Code wasnt transmitted'], 404);
             }
 
