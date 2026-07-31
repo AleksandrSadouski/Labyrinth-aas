@@ -10,7 +10,7 @@ class Room extends Model
     'entry_x', 'entry_y', 'exit_x', 'exit_y'];
     protected $casts = ['maze' => 'array'];
 
-    public function player()
+    public function players()
     {
         return $this->hasMany(Player::class, 'room_id');
     }    

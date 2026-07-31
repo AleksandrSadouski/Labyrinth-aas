@@ -102,7 +102,7 @@ class GameController extends Controller
                 else $room->winner_id = 1;
             }
         
-        $room->players()->where('id', $player->id)->delete();
+        $player->delete();
 
         if($room->players->count() == 0)
             {
