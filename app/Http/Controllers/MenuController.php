@@ -24,12 +24,21 @@ class MenuController extends Controller
     public function createRoom(CreateRoomRequest $request)
     {
         $profile = $request->user();
+        
+        if ($profile->player != null && $profile->player->room_id != null)
+            {
+                return response()->json(['status' => 'error', 
+                'message' => 'Player in other room'], 409);
+            }
+
         $player = new Player();
         $player->profile_id = $profile->id;
         $room = new Room();
+
         $room->size = $request->input('size');
         $room->branch_weight = $request->input('branch_weight');
         $room->hallway_weight = $request->input('hallway_weight');
+
         $maze = new MazeService($room->size, $room->branch_weight, $room->hallway_weight);
         $room->maze = $maze->getMaze();
         
@@ -59,10 +68,18 @@ class MenuController extends Controller
     public function joinRoom(JoinRoomRequest $request)
     {
         $profile = $request->user();
+
+        if ($profile->player != null && $profile->player->room_id != null)
+            {
+                return response()->json(['status' => 'error', 
+                'message' => 'Player in other room'], 409);
+            }
+
         $player = new Player();
         $player->profile_id = $profile->id;
         $roomCode = $request->input('code');
         $room = Room::with('players')->where('code', $roomCode)->first();
+
         if (!$room)
             {
                 return response()->json(['status' => 'error', 
@@ -78,6 +95,7 @@ class MenuController extends Controller
                 return response()->json(['status' => 'error',
                 'message' => 'Room is occupied'], 409);
             }
+
         $player->room_id = $room->id;
         $player->player_order = 2;
         $player->x = $room->entry_x;

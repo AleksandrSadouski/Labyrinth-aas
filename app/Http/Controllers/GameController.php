@@ -24,8 +24,6 @@ class GameController extends Controller
                 'message' => 'Code wasnt transmitted'], 404);
             }
 
-        $player = $request->user()->player;
-
         if($room->status != 'active')
             {
                 return response()->json(['status' => 'error',
@@ -55,7 +53,7 @@ class GameController extends Controller
                 $room->winner_id = $player->player_order;
                 $room->status = 'finished';
                 $nextTurn = null;
-                return response->json(['status' => 'success',
+                return response()->json(['status' => 'success',
                 'message' => 'You win!',
                 'new_x' => $newX,
                 'new_y' => $newY,
@@ -72,7 +70,7 @@ class GameController extends Controller
                 }
             
             $room->current_turn = $nextTurn;
-            return response->json(['status' => 'success',
+            return response()->json(['status' => 'success',
                 'message' => 'Move made',
                 'new_x' => $newX,
                 'new_y' => $newY,
@@ -104,13 +102,16 @@ class GameController extends Controller
         
         $player->delete();
 
-        if($room->players->count() == 0)
+        if($room->players()->count() == 0)
             {
                 $room->delete();
+                return response()->json(['status' => 'success',
+                'message' => 'Player succesfuly exit room'], 200);
             }
-
+        else $room->save();
         return response()->json(['status' => 'success',
-        'message' => 'Player succesfuly exit room'], 200);
+        'message' => 'Player succesfuly exit room',
+        'data' => new RoomResource($room)], 200);
     }
 
     public function cancelRoom(Request $request)
