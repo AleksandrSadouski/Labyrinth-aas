@@ -24,7 +24,7 @@ class MenuController extends Controller
     public function createRoom(CreateRoomRequest $request)
     {
         $profile = $request->user();
-        
+
         if ($profile->player != null && $profile->player->room_id != null)
             {
                 return response()->json(['status' => 'error', 

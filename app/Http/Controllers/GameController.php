@@ -52,6 +52,7 @@ class GameController extends Controller
             {
                 $room->winner_id = $player->player_order;
                 $room->status = 'finished';
+                $room->save();
                 $nextTurn = null;
                 return response()->json(['status' => 'success',
                 'message' => 'You win!',
@@ -70,6 +71,7 @@ class GameController extends Controller
                 }
             
             $room->current_turn = $nextTurn;
+            $room->save();
             return response()->json(['status' => 'success',
                 'message' => 'Move made',
                 'new_x' => $newX,

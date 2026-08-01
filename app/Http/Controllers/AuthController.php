@@ -27,7 +27,7 @@ class AuthController extends Controller
         return response()->json(['status' => 'success',
         'message' => 'Successful login to profile',
         'data' => new ProfileResource($profile), 
-        'token' => $token, 200]);     
+        'token' => $token], 200);     
     }
     
     public function registerProfile(RegisterRequest $request)
@@ -42,6 +42,6 @@ class AuthController extends Controller
         return response()->json(['status' => 'success',
         'message' => 'Successful profile creation',
         'data' => new ProfileResource($profile), 
-        'token' => $token, 200]);
+        'token' => $token], 200);
     }
 }
