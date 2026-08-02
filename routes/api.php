@@ -10,7 +10,7 @@ Route::post('/auth/login', [AuthController::class, 'loginProfile']);
 Route::post('/auth/register', [AuthController::class, 'registerProfile']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/menu', [MenuController::class, 'exitProfile']);
+    Route::post('/menu/logout', [MenuController::class, 'exitProfile']);
     Route::post('/menu/editor', [MenuController::class, 'createRoom']);
     Route::post('/menu/join', [MenuController::class, 'joinRoom']);
     Route::get('/menu/stats', [MenuController::class, 'showStats']);
