@@ -9,6 +9,7 @@ use App\Models\Room;
 use App\Services\MazeService;
 use App\Services\CodeGeneratorService;
 use App\Http\Resources\RoomResource;
+use App\Http\Resources\ProfileResource;
 use App\Http\Requests\JoinRoomRequest;
 use App\Http\Requests\CreateRoomRequest;
 

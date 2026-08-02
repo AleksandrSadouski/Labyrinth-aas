@@ -104,10 +104,13 @@ class GameController extends Controller
                 $room->status = 'finished';
                 $profile->lose_total++;
                 $profile->rating -= 15;
-                $otherPlayer->profile->win_total++;
-                $otherPlayer->profile->rating += 15;
                 $profile->save();
-                $otherPlayer->profile->save();
+                if ($otherPlayer != null)
+                    {
+                        $otherPlayer->profile->win_total++;
+                        $otherPlayer->profile->rating += 15;
+                        $otherPlayer->profile->save();
+                    }
                 if($player->player_order == 1)
                     {
                         $room->winner_order = 2;
