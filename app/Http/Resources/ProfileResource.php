@@ -12,6 +12,7 @@ class ProfileResource extends JsonResource
         return ['id_profile' => $this->id,
         'name' => $this->name,
         'rating' => $this->rating,
+        'game_total' =>$this->game_total,
         'win_total' => $this->win_total,
         'draw_total' => $this->draw_total,
         'lose_total' => $this->lose_total,

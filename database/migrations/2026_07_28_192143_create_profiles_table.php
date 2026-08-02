@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('password');
             $table->integer('rating')->default(150);
+            $table->integer('game_total')->default(0);
             $table->integer('win_total')->default(0);
             $table->integer('draw_total')->default(0);
             $table->integer('lose_total')->default(0);
