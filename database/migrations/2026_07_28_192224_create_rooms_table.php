@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('current_turn')->default(1);
             $table->integer('turn_total')->default(0);
             $table->string('status')->default('waiting');
-            $table->integer('winner_id')->nullable();
+            $table->integer('winner_order')->nullable();
             $table->boolean('draw')->default(false);
             $table->timestamps();
         });

@@ -22,7 +22,7 @@ class RoomResource extends JsonResource
         'current_turn' => $this->current_turn,
         'turn_total' => $this->turn_total,
         'status' => $this->status,
-        'winner_id' => $this->winner_id,
+        'winner_order' => $this->winner_order,
         'draw' => $this->draw,
         'players' => PlayerResource::collection($this->whenLoaded('players'))];
     }

@@ -12,8 +12,9 @@ class GameController extends Controller
 {
     public function makeMove(Request $request)
     {
+        $profile = $request->user();
+        $player = $profile->player;
         $roomCode = $request->input('code');
-        $player = $request->user()->player;
         $newX = $request->input('new_x');
         $newY = $request->input('new_y');
 
@@ -50,9 +51,12 @@ class GameController extends Controller
 
         if($newY == $room->exit_y && $newX == $room->exit_x)
             {
-                $room->winner_id = $player->player_order;
+                $room->winner_order = $player->player_order;
                 $room->status = 'finished';
                 $room->save();
+                $profile->win_total++;
+                $profile->rating += 15;
+                $profile->save();
                 $nextTurn = null;
                 return response()->json(['status' => 'success',
                 'message' => 'You win!',
@@ -67,6 +71,7 @@ class GameController extends Controller
                 }
                 else
                 {
+                    $room->turn_total++;
                     $nextTurn = 1;
                 }
             
@@ -82,6 +87,7 @@ class GameController extends Controller
 
     public function exitRoom(Request $request)
     {
+        $profile = $request->user();
         $roomCode = $request->input('code');
         $room = Room::with('players')->where('code', $roomCode)->first();
         if(!$room)
@@ -91,15 +97,22 @@ class GameController extends Controller
             }
         
         $player = $request->user()->player;
+        $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
 
         if($room->status == 'active')
             {
                 $room->status = 'finished';
+                $profile->lose_total++;
+                $profile->rating -= 15;
+                $otherPlayer->profile->win_total++;
+                $otherPlayer->profile->rating += 15;
+                $profile->save();
+                $otherPlayer->profile->save();
                 if($player->player_order == 1)
                     {
-                        $room->winner_id = 2;
+                        $room->winner_order = 2;
                     }
-                else $room->winner_id = 1;
+                else $room->winner_order = 1;
             }
         
         $player->delete();

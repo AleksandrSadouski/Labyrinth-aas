@@ -21,6 +21,14 @@ class MenuController extends Controller
         'message' => 'Player log out'], 200);
     }
 
+    public function showStats(Request $request)
+    {
+        $profile = $request->user();
+        return response()->json(['status' => 'success',
+        'message' => 'Show stats',
+        'data' => new ProfileResource($profile)], 200);
+    }
+
     public function createRoom(CreateRoomRequest $request)
     {
         $profile = $request->user();
