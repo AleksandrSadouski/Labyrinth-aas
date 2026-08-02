@@ -38,12 +38,12 @@ Labyrinth-aas — это один из проектов из серии '-aas'. 
 |---|---|---|
 | POST | `/api/auth/login` | Вход в профиль |
 | POST | `/api/auth/register` | Регистрация профиля |
-| POST | `/api/menu/logout` | Выход из профиля |
+| DELETE | `/api/menu/logout` | Выход из профиля |
 | POST | `/api/menu/editor` | Создание новой комнаты |
 | POST | `/api/menu/join` | Подключение к существующей комнате |
 | GET | `/api/menu/stats` | Показать статистику профиля |
 | POST | `/api/game/moves` | Сделать ход в активной игре |
-| DELETE | `/api/game/exit` | Выйти из комнаты |
+| POST | `/api/game/exit` | Выйти из комнаты |
 | DELETE | `/api/game/cancel` | Отменить созданную комнату |
 | GET | `/api/poll` | Пуллинг|
 
