@@ -24,12 +24,12 @@ class GameService
                 $otherPlayer->profile->lose_total++;
                 $otherPlayer->profile->rating -= 15;
                 $otherPlayer->profile->save();
-                $nextTurn = null;
+                $room->current_turn = null;
                 return $answer = ['status' => 'success',
                 'message' => 'You win!',
                 'new_x' => $newX,
                 'new_y' => $newY,
-                'current_turn' => $nextTurn,
+                'current_turn' => $room->current_turn,
                 'winner' => $room->winner_order,
                 'draw' => $room->draw];
                     }
@@ -47,12 +47,12 @@ class GameService
                 $otherPlayer->profile->draw_total++;
                 $otherPlayer->profile->rating += 3;
                 $otherPlayer->profile->save();
-                $nextTurn = null;
+                $room->current_turn = null;
                 return $answer = ['status' => 'success',
                 'message' => 'Draw',
                 'new_x' => $newX,
                 'new_y' => $newY,
-                'current_turn' => $nextTurn,
+                'current_turn' => $room->current_turn,
                 'winner' => $room->winner_order,
                 'draw' => $room->draw];
                 }
@@ -77,12 +77,12 @@ class GameService
                 $otherPlayer->profile->win_total++;
                 $otherPlayer->profile->rating += 15;
                 $otherPlayer->profile->save();
-                $nextTurn = null;
+                $room->current_turn = null;
                 return $answer = ['status' => 'success',
                 'message' => 'You lose!',
                 'new_x' => $newX,
                 'new_y' => $newY,
-                'current_turn' => $nextTurn,
+                'current_turn' => $room->current_turn,
                 'winner' => $room->winner_order,
                 'draw' => $room->draw];
             }
