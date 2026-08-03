@@ -101,4 +101,33 @@ class MoveService
                     $room->current_turn = 1;
                 }
     }
+
+    public function checkProblems(Player $player, Player $otherPlayer, Room $room, array $maze, int $newX, int $newY): array
+    {
+        if($room->status != 'active')
+            {
+                return $answer = ['status' => 'error',
+                'message' => 'Game is not active'];
+            }
+
+        if ($player->player_order != $room->current_turn)
+            {
+                return $answer = ['status' => 'error',
+                'message' => 'Its not your move now']; 
+            }
+
+        if ($otherPlayer == null)
+            {
+                return $answer = ['status' => 'error',
+                'message' => 'Not other player'];
+            }
+        
+        if ($maze[$newY][$newX] != 0)
+            {
+                return $answer = ['status' => 'error',
+                'message' => 'Theres a wall there']; 
+            }
+        
+        return $answer = [];
+    }
 }

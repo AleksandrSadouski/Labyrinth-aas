@@ -19,38 +19,19 @@ class GameController extends Controller
         $newX = $request->input('new_x');
         $newY = $request->input('new_y');
         $moveService = new MoveService();
-
         $room = Room::with('players')->where('code', $roomCode)->first();
         if(!$room)
             {
                 return response()->json(['status' => 'error',
-                'message' => 'Code wasnt transmitted'], 409);
+                'message' => 'Code wasnt transmitted'], 404);
             }
-
-        if($room->status != 'active')
-            {
-                return response()->json(['status' => 'error',
-                'message' => 'Game is not active'], 409);  
-            }
-
-        if ($player->player_order != $room->current_turn)
-            {
-                return response()->json(['status' => 'error',
-                'message' => 'Its not your move now'], 409); 
-            }
-
         $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
-        if ($otherPlayer == null)
-        {
-            return response()->json(['status' => 'error',
-                'message' => 'Not other player'], 409); 
-        }
         $maze = $room->maze;
-        
-        if ($maze[$newY][$newX] != 0)
+
+        $answer = $moveService->checkProblems($player, $otherPlayer, $room, $maze, $newX, $newY);
+        if($answer != [])
             {
-                return response()->json(['status' => 'error',
-                'message' => 'Theres a wall there'], 409); 
+                return response()->json($answer, 409);
             }
 
         $player->x = $newX;
@@ -82,7 +63,7 @@ class GameController extends Controller
         if(!$room)
             {
                 return response()->json(['status' => 'error',
-                'message' => 'Code wasnt transmitted'], 409);
+                'message' => 'Code wasnt transmitted'], 404);
             }
         
         $player = $request->user()->player;
@@ -130,7 +111,7 @@ class GameController extends Controller
         if(!$room)
             {
                 return response()->json(['status' => 'error',
-                'message' => 'Code wasnt transmitted'], 409);
+                'message' => 'Code wasnt transmitted'], 404);
             }
         
         if($room->status != 'waiting')
@@ -156,7 +137,7 @@ class GameController extends Controller
         if(!$room)
             {
                 return response()->json(['status' => 'error',
-                'message' => 'Code wasnt transmitted'], 409);
+                'message' => 'Code wasnt transmitted'], 404);
             }
 
         return response()->json(['status' => 'success',
