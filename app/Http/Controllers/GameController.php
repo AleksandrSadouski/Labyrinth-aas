@@ -36,7 +36,8 @@ class GameController extends Controller
                 return response()->json(['status' => 'error',
                 'message' => 'Its not your move now'], 409); 
             }
-        
+
+        $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
         $maze = $room->maze;
         
         if ($maze[$newY][$newX] != 0)
@@ -58,13 +59,20 @@ class GameController extends Controller
                 $profile->win_total++;
                 $profile->rating += 15;
                 $profile->save();
+                if($otherPlayer != null)
+                    {
+                        $otherPlayer->profile->game_total++;
+                        $otherPlayer->profile->lose_total++;
+                        $otherPlayer->profile->rating -= 15;
+                        $otherPlayer->profile->save();
+                    }
                 $nextTurn = null;
                 return response()->json(['status' => 'success',
                 'message' => 'You win!',
                 'new_x' => $newX,
                 'new_y' => $newY,
                 'current_turn' => $nextTurn,
-                'winner' => $player->player_order]);
+                'winner' => $room->winner_order]);
             }
             elseif($player->player_order == 1)
                 {
