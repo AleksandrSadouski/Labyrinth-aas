@@ -16,8 +16,8 @@ class GameController extends Controller
         $profile = $request->user();
         $player = $profile->player;
         $roomCode = $request->input('code');
-        $newX = $request->input('new_x');
-        $newY = $request->input('new_y');
+        $player->x = $request->input('new_x');
+        $player->y = $request->input('new_y');
         $moveService = new MoveService();
         $room = Room::with('players')->where('code', $roomCode)->first();
         if(!$room)
@@ -28,17 +28,14 @@ class GameController extends Controller
         $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
         $maze = $room->maze;
 
-        $answer = $moveService->checkProblems($player, $otherPlayer, $room, $maze, $newX, $newY);
+        $answer = $moveService->checkProblems($player, $otherPlayer, $room, $maze);
         if($answer != [])
             {
                 return response()->json($answer, 409);
             }
-
-        $player->x = $newX;
-        $player->y = $newY;
         $player->save();
 
-        $answer = $moveService->checkWinOrDraw($newX, $newY, $player, $otherPlayer, $room, $profile);
+        $answer = $moveService->checkWinOrDraw($player, $otherPlayer, $room, $profile);
         if($answer != [])
             {
                 return response()->json($answer, 200);
@@ -49,8 +46,8 @@ class GameController extends Controller
         $room->save();
         return response()->json(['status' => 'success',
             'message' => 'Move made',
-            'new_x' => $newX,
-            'new_y' => $newY,
+            'new_x' => $player->x,
+            'new_y' => $player->y,
             'current_turn' => $room->current_turn,
             'winner' => null]);
     }

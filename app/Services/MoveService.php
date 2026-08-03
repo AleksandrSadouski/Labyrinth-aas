@@ -7,9 +7,9 @@ use App\Models\Profile;
 
 class MoveService
 {
-    public function checkWinOrDraw(int $newX, int $newY, Player $player, Player $otherPlayer, Room $room, Profile $profile): array
+    public function checkWinOrDraw(Player $player, Player $otherPlayer, Room $room, Profile $profile): array
     {
-        if($newY == $room->exit_y && $newX == $room->exit_x)
+        if($player->y == $room->exit_y && $player->x == $room->exit_x)
             {
                 if($player->player_order == 2 && $room->first_finished == false)
                     {
@@ -27,8 +27,8 @@ class MoveService
                 $otherPlayer->profile->save();
                 return $answer = ['status' => 'success',
                 'message' => 'You win!',
-                'new_x' => $newX,
-                'new_y' => $newY,
+                'new_x' => $player->x,
+                'new_y' => $player->y,
                 'current_turn' => $room->current_turn,
                 'winner' => $room->winner_order,
                 'draw' => $room->draw];
@@ -50,8 +50,8 @@ class MoveService
                 $otherPlayer->profile->save();
                 return $answer = ['status' => 'success',
                 'message' => 'Draw',
-                'new_x' => $newX,
-                'new_y' => $newY,
+                'new_x' => $player->x,
+                'new_y' => $player->y,
                 'current_turn' => $room->current_turn,
                 'winner' => $room->winner_order,
                 'draw' => $room->draw];
@@ -80,8 +80,8 @@ class MoveService
                 $otherPlayer->profile->save();
                 return $answer = ['status' => 'success',
                 'message' => 'You lose!',
-                'new_x' => $newX,
-                'new_y' => $newY,
+                'new_x' => $player->x,
+                'new_y' => $player->y,
                 'current_turn' => $room->current_turn,
                 'winner' => $room->winner_order,
                 'draw' => $room->draw];
@@ -102,7 +102,7 @@ class MoveService
                 }
     }
 
-    public function checkProblems(Player $player, Player $otherPlayer, Room $room, array $maze, int $newX, int $newY): array
+    public function checkProblems(Player $player, Player $otherPlayer, Room $room, array $maze): array
     {
         if($room->status != 'active')
             {
@@ -122,7 +122,7 @@ class MoveService
                 'message' => 'Not other player'];
             }
         
-        if ($maze[$newY][$newX] != 0)
+        if ($maze[$player->y][$player->x] != 0)
             {
                 return $answer = ['status' => 'error',
                 'message' => 'Theres a wall there']; 
