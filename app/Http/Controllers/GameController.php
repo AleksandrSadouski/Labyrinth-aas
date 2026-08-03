@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
+use App\Services\GameService;
 use App\Http\Resources\RoomResource;
 
 class GameController extends Controller
@@ -17,6 +18,7 @@ class GameController extends Controller
         $roomCode = $request->input('code');
         $newX = $request->input('new_x');
         $newY = $request->input('new_y');
+        $gameService = new GameService();
 
         $room = Room::with('players')->where('code', $roomCode)->first();
         if(!$room)
@@ -38,6 +40,11 @@ class GameController extends Controller
             }
 
         $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
+        if ($otherPlayer == null)
+        {
+            return response()->json(['status' => 'error',
+                'message' => 'Not other player'], 409); 
+        }
         $maze = $room->maze;
         
         if ($maze[$newY][$newX] != 0)
@@ -50,48 +57,29 @@ class GameController extends Controller
         $player->y = $newY;
         $player->save();
 
-        if($newY == $room->exit_y && $newX == $room->exit_x)
+        $answer = $gameService->checkWinOrDraw($newX, $newY, $player, $otherPlayer, $room, $profile);
+        if($answer != [])
             {
-                $room->winner_order = $player->player_order;
-                $room->status = 'finished';
-                $room->save();
-                $profile->game_total++;
-                $profile->win_total++;
-                $profile->rating += 15;
-                $profile->save();
-                if($otherPlayer != null)
-                    {
-                        $otherPlayer->profile->game_total++;
-                        $otherPlayer->profile->lose_total++;
-                        $otherPlayer->profile->rating -= 15;
-                        $otherPlayer->profile->save();
-                    }
-                $nextTurn = null;
-                return response()->json(['status' => 'success',
-                'message' => 'You win!',
-                'new_x' => $newX,
-                'new_y' => $newY,
-                'current_turn' => $nextTurn,
-                'winner' => $room->winner_order]);
+                return response()->json($answer, 200);
             }
-            elseif($player->player_order == 1)
-                {
-                    $nextTurn = 2;
-                }
-                else
+
+        if($player->player_order == 1)
+            {
+                $room->current_turn = 2;
+            }
+            else
                 {
                     $room->turn_total++;
-                    $nextTurn = 1;
+                    $room->current_turn = 1;
                 }
             
-            $room->current_turn = $nextTurn;
-            $room->save();
-            return response()->json(['status' => 'success',
-                'message' => 'Move made',
-                'new_x' => $newX,
-                'new_y' => $newY,
-                'current_turn' => $nextTurn,
-                'winner' => null]);
+        $room->save();
+        return response()->json(['status' => 'success',
+            'message' => 'Move made',
+            'new_x' => $newX,
+            'new_y' => $newY,
+            'current_turn' => $room->current_turn,
+            'winner' => null]);
     }
 
     public function exitRoom(Request $request)

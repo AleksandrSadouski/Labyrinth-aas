@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('status')->default('waiting');
             $table->integer('winner_order')->nullable();
             $table->boolean('draw')->default(false);
+            $table->boolean('first_finished')->default(false);
             $table->timestamps();
         });
     }

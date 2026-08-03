@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 
-class MazeService 
+class MazeService
 {
     private array $maze;
     private int $size;
