@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
-use App\Services\GameService;
+use App\Services\MoveService;
 use App\Http\Resources\RoomResource;
 
 class GameController extends Controller
@@ -18,13 +18,13 @@ class GameController extends Controller
         $roomCode = $request->input('code');
         $newX = $request->input('new_x');
         $newY = $request->input('new_y');
-        $gameService = new GameService();
+        $moveService = new MoveService();
 
         $room = Room::with('players')->where('code', $roomCode)->first();
         if(!$room)
             {
                 return response()->json(['status' => 'error',
-                'message' => 'Code wasnt transmitted'], 404);
+                'message' => 'Code wasnt transmitted'], 409);
             }
 
         if($room->status != 'active')
@@ -57,21 +57,13 @@ class GameController extends Controller
         $player->y = $newY;
         $player->save();
 
-        $answer = $gameService->checkWinOrDraw($newX, $newY, $player, $otherPlayer, $room, $profile);
+        $answer = $moveService->checkWinOrDraw($newX, $newY, $player, $otherPlayer, $room, $profile);
         if($answer != [])
             {
                 return response()->json($answer, 200);
             }
 
-        if($player->player_order == 1)
-            {
-                $room->current_turn = 2;
-            }
-            else
-                {
-                    $room->turn_total++;
-                    $room->current_turn = 1;
-                }
+        $moveService->changeOfTurn($player, $room);
             
         $room->save();
         return response()->json(['status' => 'success',
@@ -90,7 +82,7 @@ class GameController extends Controller
         if(!$room)
             {
                 return response()->json(['status' => 'error',
-                'message' => 'Code wasnt transmitted'], 404);
+                'message' => 'Code wasnt transmitted'], 409);
             }
         
         $player = $request->user()->player;
@@ -138,7 +130,7 @@ class GameController extends Controller
         if(!$room)
             {
                 return response()->json(['status' => 'error',
-                'message' => 'Code wasnt transmitted'], 404);
+                'message' => 'Code wasnt transmitted'], 409);
             }
         
         if($room->status != 'waiting')
@@ -164,7 +156,7 @@ class GameController extends Controller
         if(!$room)
             {
                 return response()->json(['status' => 'error',
-                'message' => 'Code wasnt transmitted'], 404);
+                'message' => 'Code wasnt transmitted'], 409);
             }
 
         return response()->json(['status' => 'success',
