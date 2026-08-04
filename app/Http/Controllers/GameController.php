@@ -26,9 +26,8 @@ class GameController extends Controller
                 'message' => 'Code wasnt transmitted'], 404);
             }
         $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
-        $maze = $room->maze;
 
-        $answer = $moveService->checkProblems($player, $otherPlayer, $room, $maze);
+        $answer = $moveService->checkProblems($player, $otherPlayer, $room);
         if($answer != null)
             {
                 return response()->json($answer, 409);
@@ -80,6 +79,7 @@ class GameController extends Controller
                         $otherPlayer->profile->rating += 15;
                         $otherPlayer->profile->save();
                     }
+                
                 if($player->player_order == 1)
                     {
                         $room->winner_order = 2;
