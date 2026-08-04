@@ -61,7 +61,7 @@ class MoveService
                     {
                         $room->first_finished = true;
                         $room->save();
-                        return $answer = [];
+                        return null;
                     }
             }
         elseif($player->player_order == 2 && $room->first_finished == true)
@@ -86,7 +86,7 @@ class MoveService
                 'winner' => $room->winner_order,
                 'draw' => $room->draw];
             }
-            else return $answer = [];
+            else return $answer = null;
     }
 
     public function changeOfTurn(Player $player, Room $room): void
@@ -128,6 +128,6 @@ class MoveService
                 'message' => 'Theres a wall there']; 
             }
         
-        return $answer = [];
+        return $answer = null;
     }
 }

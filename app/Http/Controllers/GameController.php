@@ -29,14 +29,14 @@ class GameController extends Controller
         $maze = $room->maze;
 
         $answer = $moveService->checkProblems($player, $otherPlayer, $room, $maze);
-        if($answer != [])
+        if($answer != null)
             {
                 return response()->json($answer, 409);
             }
         $player->save();
 
         $answer = $moveService->checkWinOrDraw($player, $otherPlayer, $room, $profile);
-        if($answer != [])
+        if($answer != null)
             {
                 return response()->json($answer, 200);
             }
