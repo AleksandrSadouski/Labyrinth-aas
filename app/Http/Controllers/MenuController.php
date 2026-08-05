@@ -112,6 +112,7 @@ class MenuController extends Controller
         $room->status = 'active';
         $player->save();
         $room->save();
+        
         return response()->json(['status' => 'success',
         'message' => 'Successful connection',
         'data' => new RoomResource($room)], 200);

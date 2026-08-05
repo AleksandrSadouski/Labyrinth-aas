@@ -5,6 +5,7 @@ use App\Models\Player;
 use App\Models\Room;
 use App\Models\Profile;
 use App\Services\EloService;
+use Illuminate\Support\Facades\DB;
 
 class UpdateStatsService
 {
@@ -17,6 +18,7 @@ class UpdateStatsService
 
     public function updateStats(string $key, Player $player, Player $otherPlayer, Room $room, Profile $profile): void
     {
+        DB::transaction(function () use ($key, $player, $otherPlayer, $room, $profile) {
         switch($key)
         {
             case 'win':
@@ -37,6 +39,11 @@ class UpdateStatsService
             default:
             break;
         }
+
+        $room->save();
+        $profile->save();
+        $otherPlayer->profile->save();
+        });
     }
 
     public function updateRoom(string $key, Player $player, Room $room): void
@@ -47,8 +54,6 @@ class UpdateStatsService
         if($key == 'draw')
         {$room->draw = true;}
         else $room->winner_order = $player->player_order;
-
-        $room->save();
     }
 
     public function updateWinner(string $key, Profile $profileWinner, int $ratingLoser): void
@@ -56,7 +61,6 @@ class UpdateStatsService
         $profileWinner->game_total++;
         $profileWinner->win_total++;
         $profileWinner->rating = $this->eloService->calcRating($key, $profileWinner->rating, $ratingLoser);
-        $profileWinner->save();
     }
 
     public function updateLoser(string $key, Profile $profileLoser, int $ratingWinner): void
@@ -64,7 +68,6 @@ class UpdateStatsService
         $profileLoser->game_total++;
         $profileLoser->lose_total++;
         $profileLoser->rating = $this->eloService->calcRating($key, $profileLoser->rating, $ratingWinner);
-        $profileLoser->save();
     }
 
     public function updateDrawer(string $key, Profile $profileDrawer, int $ratingOtherDrawer): void
@@ -72,6 +75,5 @@ class UpdateStatsService
         $profileDrawer->game_total++;
         $profileDrawer->draw_total++;
         $profileDrawer->rating = $this->eloService->calcRating($key, $profileDrawer->rating, $ratingOtherDrawer);
-        $profileDrawer->save();
     }
 }

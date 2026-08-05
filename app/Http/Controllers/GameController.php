@@ -7,10 +7,20 @@ use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
 use App\Services\MoveService;
+use App\Services\CheckResultService;
 use App\Http\Resources\RoomResource;
 
 class GameController extends Controller
 {
+    private CheckResultService $checkResultService;
+    private MoveService $moveService;
+
+    public function __construct(CheckResultService $checkResultService, MoveService $moveService)
+    {
+        $this->checkResultService = $checkResultService;
+        $this->moveService = $moveService;
+    }
+
     public function makeMove(Request $request)
     {
         $profile = $request->user();
@@ -18,7 +28,6 @@ class GameController extends Controller
         $roomCode = $request->input('code');
         $player->x = $request->input('new_x');
         $player->y = $request->input('new_y');
-        $moveService = new MoveService();
         $room = Room::with('players')->where('code', $roomCode)->first();
         if(!$room)
             {
@@ -27,20 +36,20 @@ class GameController extends Controller
             }
         $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
 
-        $answer = $moveService->checkProblems($player, $otherPlayer, $room);
+        $answer = $this->moveService->checkProblems($player, $otherPlayer, $room);
         if($answer != null)
             {
                 return response()->json($answer, 409);
             }
         $player->save();
 
-        $answer = $moveService->checkWinOrDraw($player, $otherPlayer, $room, $profile);
+        $answer = $this->checkResultService->checkResultMove($player, $otherPlayer, $room, $profile);
         if($answer != null)
             {
                 return response()->json($answer, 200);
             }
 
-        $moveService->changeOfTurn($player, $room);
+        $this->moveService->changeOfTurn($player, $room);
             
         $room->save();
         return response()->json(['status' => 'success',
@@ -65,27 +74,7 @@ class GameController extends Controller
         $player = $request->user()->player;
         $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
 
-        if($room->status == 'active')
-            {
-                $room->status = 'finished';
-                $profile->game_total++;
-                $profile->lose_total++;
-                $profile->rating -= 15;
-                $profile->save();
-                if ($otherPlayer != null)
-                    {
-                        $otherPlayer->profile->game_total++;
-                        $otherPlayer->profile->win_total++;
-                        $otherPlayer->profile->rating += 15;
-                        $otherPlayer->profile->save();
-                    }
-                
-                if($player->player_order == 1)
-                    {
-                        $room->winner_order = 2;
-                    }
-                else $room->winner_order = 1;
-            }
+        $this->checkResultService->checkResultExit($player, $otherPlayer, $room, $profile);
         
         $player->delete();
 
