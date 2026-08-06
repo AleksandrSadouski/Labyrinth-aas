@@ -10,8 +10,11 @@ use App\Services\MazeService;
 use App\Services\CodeGeneratorService;
 use App\Http\Resources\RoomResource;
 use App\Http\Resources\ProfileResource;
+use App\Http\Resources\LeaderboardResource;
 use App\Http\Requests\JoinRoomRequest;
 use App\Http\Requests\CreateRoomRequest;
+use App\Http\Requests\RenameRequest;
+use Illuminate\Support\Facades\Cache;
 
 class MenuController extends Controller
 {
@@ -28,6 +31,26 @@ class MenuController extends Controller
         return response()->json(['status' => 'success',
         'message' => 'Show stats',
         'data' => new ProfileResource($profile)], 200);
+    }
+
+    public function renameProfile(RenameRequest $request)
+    {
+        $profile = $request->user();
+        $profile->name = $request->input('new_name');
+        $profile->save();
+        return response()->json(['status' => 'success',
+        'message' => 'Profile renamed',
+        'data' => new ProfileResource($profile)], 200);
+    }
+
+    public function showLeaderboardRating(Request $request)
+    {
+        $profiles = Cache::remember('max_rating_top', 240, function () {
+            return Profile::orderBy('rating', 'desc')->select('name', 'rating')->limit(10)->get();
+            });
+        return response()->json(['status' => 'success',
+        'message' => 'Show Leaderboard',
+        'data' => LeaderboardResource::collection($profiles)], 200);
     }
 
     public function createRoom(CreateRoomRequest $request)

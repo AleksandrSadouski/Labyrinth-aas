@@ -14,6 +14,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/menu/editor', [MenuController::class, 'createRoom']);
     Route::post('/menu/join', [MenuController::class, 'joinRoom']);
     Route::get('/menu/stats', [MenuController::class, 'showStats']);
+    Route::patch('/menu/name', [MenuController::class, 'renameProfile']);
+    Route::get('/menu/leaderboard/rating', [MenuController::class, 'showLeaderboardRating']);
 
     Route::post('/game/moves', [GameController::class, 'makeMove']);
     Route::post('/game/exit', [GameController::class, 'exitRoom']);
