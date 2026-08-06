@@ -30,6 +30,9 @@ Labyrinth-aas — это проект из серии работ '-aas', где 
         - **MazeService.php** — генерация лабиринта с настраиваемыми параметрами (размер, ветвление, коридоры)
         - **CodeGeneratorService.php** — генерация уникальных кодов для комнат
         - **MoveService.php** — сервис для логики хода
+        - **CheckResultService.php** — проверка результата хода (победа/ничья/поражение)
+        - **EloService.php** — расчет рейтинга по системе Эло
+        - **UpdateStatsService.php** — обновление статистики и рейтинга
 
 ---
 
@@ -40,13 +43,15 @@ Labyrinth-aas — это проект из серии работ '-aas', где 
 | POST | `/api/auth/login` | Вход в профиль |
 | POST | `/api/auth/register` | Регистрация профиля |
 | DELETE | `/api/menu/logout` | Выход из профиля |
+| PATCH | /api/menu/name | Смена имени профиля |
+| GET | /api/menu/leaderboard/rating | Топ-10 игроков по рейтингу |
 | POST | `/api/menu/editor` | Создание новой комнаты |
 | POST | `/api/menu/join` | Подключение к существующей комнате |
 | GET | `/api/menu/stats` | Показать статистику профиля |
 | POST | `/api/game/moves` | Сделать ход в активной игре |
 | POST | `/api/game/exit` | Выйти из комнаты |
 | DELETE | `/api/game/cancel` | Отменить созданную комнату |
-| GET | `/api/poll` | Пуллинг|
+| GET | `/api/poll` | Пуллинг |
 
 ---
 ## Планы по улучшению проекта
@@ -70,7 +75,7 @@ Labyrinth-aas — это проект из серии работ '-aas', где 
 Клонировать репозиторий:
 
 ```bash
-git clone https://github.com/yourusername/Maze-aas.git
+git clone https://github.com/AleksandrSadouski/Labyrinth-aas.git
 cd Maze-aas
 ```
 
