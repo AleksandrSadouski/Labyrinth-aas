@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
+use App\Models\Message;
 use App\Services\MoveService;
 use App\Services\CheckResultService;
 use App\Http\Resources\RoomResource;
+use App\Http\Requests\MessageRequest;
 
 class GameController extends Controller
 {
@@ -116,10 +118,25 @@ class GameController extends Controller
         'message' => 'Room deleted'], 200);
     }
 
+    public function writeMessage(MessageRequest $request)
+    {
+        $profile = $request->user();
+        $player = $profile->player;
+        
+        $message = new Message();
+        $message->player_id = $player->id;
+        $message->message = $request->input('message');
+        $message->save();
+
+        return response()->json(['status' => 'success',
+        'message' => 'Message sent',
+        'data' => new MessageResource($message)], 200);
+    }
+
     public function checkRoom(Request $request)
     {
         $roomCode = $request->query('code');
-        $room = Room::with('players')->where('code', $roomCode)->first();
+        $room = Room::with('players.messages')->where('code', $roomCode)->first();
         if(!$room)
             {
                 return response()->json(['status' => 'error',

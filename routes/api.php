@@ -18,6 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/menu/leaderboard/rating', [MenuController::class, 'showLeaderboardRating']);
 
     Route::post('/game/moves', [GameController::class, 'makeMove']);
+    Route::post('/game/message', [GameController::class, 'writeMessage']);
     Route::post('/game/exit', [GameController::class, 'exitRoom']);
     Route::delete('/game/cancel', [GameController::class, 'cancelRoom']);
     Route::get('/poll', [GameController::class, 'checkRoom']);

@@ -15,6 +15,7 @@ class PlayerResource extends JsonResource
         'player_order' => $this->player_order,
         'x' => $this->x,
         'y' => $this->y,
-        'finished' => $this->finished];
+        'finished' => $this->finished,
+        'messages' => MessageResource::collection($this->whenLoaded('messages'))];
     }
 }

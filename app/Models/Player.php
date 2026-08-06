@@ -17,4 +17,9 @@ class Player extends Model
     {
         return $this->belongsTo(Profile::class, 'profile_id');
     }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'player_id');
+    }
 }
