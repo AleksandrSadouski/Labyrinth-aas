@@ -14,7 +14,9 @@ use App\Http\Resources\LeaderboardResource;
 use App\Http\Requests\JoinRoomRequest;
 use App\Http\Requests\CreateRoomRequest;
 use App\Http\Requests\RenameRequest;
+use App\Http\Requests\DeleteRequest;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 
 class MenuController extends Controller
 {
@@ -23,6 +25,21 @@ class MenuController extends Controller
         $request->user()->currentAccessToken()->delete();
         return response()->json(['status' => 'success',
         'message' => 'Player log out'], 200);
+    }
+
+    public function deleteProfile(DeleteRequest $request)
+    {
+        $profile = $request->user();
+        $password = $request->input('password');
+        if (!Hash::check($password, $profile->password))
+            {
+                return response()->json(['status' => 'error', 
+                'message' => 'Incorrect password'], 401);
+            }
+        $profile->tokens()->delete();
+        $profile->delete();
+        return response()->json(['status' => 'success',
+        'message' => 'Profile successfully deleted'], 200);  
     }
 
     public function showStats(Request $request)

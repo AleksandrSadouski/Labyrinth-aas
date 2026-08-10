@@ -43,8 +43,9 @@ Labyrinth-aas — это проект из серии работ '-aas', где 
 | POST | `/api/auth/login` | Вход в профиль |
 | POST | `/api/auth/register` | Регистрация профиля |
 | DELETE | `/api/menu/logout` | Выход из профиля |
-| PATCH | /api/menu/name | Смена имени профиля |
-| GET | /api/menu/leaderboard/rating | Топ-10 игроков по рейтингу |
+| DELETE | `/api/menu/delete` | Удаление профиля |
+| PATCH | `/api/menu/name` | Смена имени профиля |
+| GET | `/api/menu/leaderboard/rating` | Топ-10 игроков по рейтингу |
 | POST | `/api/menu/editor` | Создание новой комнаты |
 | POST | `/api/menu/join` | Подключение к существующей комнате |
 | GET | `/api/menu/stats` | Показать статистику профиля |
