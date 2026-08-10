@@ -78,7 +78,7 @@ Labyrinth-aas — это проект из серии работ '-aas', где 
 
 ```bash
 git clone https://github.com/AleksandrSadouski/Labyrinth-aas.git
-cd Maze-aas
+cd Labyrinth-aas
 ```
 
 Установить зависимости:

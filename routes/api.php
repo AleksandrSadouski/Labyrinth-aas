@@ -14,7 +14,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/menu/delete', [MenuController::class, 'deleteProfile']);
     Route::post('/menu/editor', [MenuController::class, 'createRoom']);
     Route::post('/menu/join', [MenuController::class, 'joinRoom']);
-    Route::get('/menu/stats', [MenuController::class, 'showStats']);
+    Route::get('/menu/stats', [MenuController::class, 'showStatsProfile']);
     Route::patch('/menu/name', [MenuController::class, 'renameProfile']);
     Route::get('/menu/leaderboard/rating', [MenuController::class, 'showLeaderboardRating']);
 
