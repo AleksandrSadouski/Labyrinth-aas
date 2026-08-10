@@ -1,20 +1,17 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
-use App\Services\MazeService;
-use App\Services\CodeGeneratorService;
 use App\Services\ProfileService;
-use App\Http\Resources\RoomResource;
+use App\Services\LeaderboardService;
+use App\Services\RoomService;
 use App\Http\Requests\JoinRoomRequest;
 use App\Http\Requests\CreateRoomRequest;
 use App\Http\Requests\RenameRequest;
 use App\Http\Requests\DeleteRequest;
-use Illuminate\Support\Facades\Hash;
 
 class MenuController extends Controller
 {
