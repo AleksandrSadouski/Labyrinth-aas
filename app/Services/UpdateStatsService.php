@@ -49,7 +49,7 @@ class UpdateStatsService
     public function updateRoom(string $key, Player $player, Room $room): void
     {
         $room->status = 'finished';
-        $room->current_turn = null;
+        $room->current_turn = 0;
 
         if($key == 'draw')
         {$room->draw = true;}
