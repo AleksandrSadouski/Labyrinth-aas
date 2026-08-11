@@ -46,6 +46,7 @@ class CheckResultService
                 elseif($player->player_order == 1)
                     {
                         $room->first_finished = true;
+                        $room->save();
                         return null;
                     }
             }
