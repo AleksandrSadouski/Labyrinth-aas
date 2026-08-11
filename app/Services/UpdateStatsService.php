@@ -23,18 +23,18 @@ class UpdateStatsService
         {
             case 'win':
                 $this->updateRoom($key, $player, $room);
-                $this->updateWinner($key, $profile, $otherPlayer->profile->rating);
-                $this->updateLoser($key, $otherPlayer->profile, $profile->rating);
+                $this->updateWinner($profile, $otherPlayer->profile->rating);
+                $this->updateLoser($otherPlayer->profile, $profile->rating);
             break;
             case 'lose':
                 $this->updateRoom($key, $otherPlayer, $room);
-                $this->updateWinner($key, $otherPlayer->profile, $profile->rating);
-                $this->updateLoser($key, $profile, $otherPlayer->profile->rating);
+                $this->updateWinner($otherPlayer->profile, $profile->rating);
+                $this->updateLoser($profile, $otherPlayer->profile->rating);
             break;
             case 'draw':
                 $this->updateRoom($key, $player, $room);
-                $this->updateDrawer($key, $profile, $otherPlayer->profile->rating);
-                $this->updateDrawer($key, $otherPlayer->profile, $profile->rating);
+                $this->updateDrawer($profile, $otherPlayer->profile->rating);
+                $this->updateDrawer($otherPlayer->profile, $profile->rating);
             break;
             default:
             break;
@@ -56,24 +56,24 @@ class UpdateStatsService
         else $room->winner_order = $player->player_order;
     }
 
-    public function updateWinner(string $key, Profile $profileWinner, int $ratingLoser): void
+    public function updateWinner(Profile $profileWinner, int $ratingLoser): void
     {
         $profileWinner->game_total++;
         $profileWinner->win_total++;
-        $profileWinner->rating = $this->eloService->calcRating($key, $profileWinner->rating, $ratingLoser);
+        $profileWinner->rating = $this->eloService->calcRating('win', $profileWinner->rating, $ratingLoser);
     }
 
-    public function updateLoser(string $key, Profile $profileLoser, int $ratingWinner): void
+    public function updateLoser(Profile $profileLoser, int $ratingWinner): void
     {
         $profileLoser->game_total++;
         $profileLoser->lose_total++;
-        $profileLoser->rating = $this->eloService->calcRating($key, $profileLoser->rating, $ratingWinner);
+        $profileLoser->rating = $this->eloService->calcRating('lose', $profileLoser->rating, $ratingWinner);
     }
 
-    public function updateDrawer(string $key, Profile $profileDrawer, int $ratingOtherDrawer): void
+    public function updateDrawer(Profile $profileDrawer, int $ratingOtherDrawer): void
     {
         $profileDrawer->game_total++;
         $profileDrawer->draw_total++;
-        $profileDrawer->rating = $this->eloService->calcRating($key, $profileDrawer->rating, $ratingOtherDrawer);
+        $profileDrawer->rating = $this->eloService->calcRating('draw', $profileDrawer->rating, $ratingOtherDrawer);
     }
 }
