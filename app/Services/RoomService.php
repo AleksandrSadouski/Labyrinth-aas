@@ -13,6 +13,13 @@ use DomainException;
 
 class RoomService
 {
+    private CodeGeneratorService $codeGeneratorService;
+
+    public function __construct(CodeGeneratorService $codeGeneratorService)
+    {
+        $this->codeGeneratorService = $codeGeneratorService;
+    }
+
     public function create(Profile $profile, int $size, float $branch_weight, float $hallway_weight): RoomResource
     {
         if ($profile->player != null && $profile->player->room_id != null)
@@ -36,8 +43,7 @@ class RoomService
         $room->hallway_weight = $hallway_weight;
         $maze = new MazeService($room->size, $room->branch_weight, $room->hallway_weight);
         $room->maze = $maze->getMaze();
-        $codeGeneratorService = new CodeGeneratorService();
-        $room->code = $codeGeneratorService->generate();
+        $room->code = $this->codeGeneratorService->generate();
         $entry = $maze->getEntry();
         $room->entry_x = $entry[1];
         $room->entry_y = $entry[0];
