@@ -6,6 +6,7 @@ use App\Models\Room;
 use App\Models\Profile;
 use App\Services\CheckResultService;
 use App\Http\Resources\RoomResource;
+use Illuminate\Support\Facades\DB;
 
 use DomainException;
 
@@ -21,8 +22,6 @@ class MoveService
     public function move(Profile $profile, string $code, int $new_x, int $new_y): array
     {
         $player = $profile->player;
-        $player->x = $new_x;
-        $player->y = $new_y;
         $room = Room::with('players')->where('code', $code)->first();
         if(!$room)
             {
@@ -30,7 +29,33 @@ class MoveService
             }
         $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
 
-        $this->checkProblems($player, $otherPlayer, $room);
+        if($room->status != 'active')
+            {
+                throw new DomainException('Game is not active', 409);
+            }
+
+        if ($player->player_order != $room->current_turn)
+            {
+                throw new DomainException('Its not your move now', 409); 
+            }
+
+        if ($otherPlayer == null)
+            {
+                throw new DomainException('Not other player', 409);
+            }
+        
+        if ($room->maze[$new_y][$new_x] != 0)
+            {
+                throw new DomainException('Theres a wall there', 409); 
+            }
+
+        if (abs($player->x - $new_x) > 1 || abs($player->y - $new_y) > 1)
+            {
+                throw new DomainException('Incorrect: you can only move one cell', 409); 
+            }
+
+        $player->x = $new_x;
+        $player->y = $new_y;
         
         $player->save();
 
@@ -40,8 +65,7 @@ class MoveService
                 return $answer;
             }
 
-        $this->changeOfTurn($player, $room);
-            
+        $this->changeOfTurn($player, $room);  
         $room->save();
 
         return ['status' => 'success',
@@ -60,28 +84,5 @@ class MoveService
                     $room->turn_total++;
                     $room->current_turn = 1;
                 }
-    }
-
-    private function checkProblems(Player $player, Player $otherPlayer, Room $room): void
-    {
-        if($room->status != 'active')
-            {
-                throw new DomainException('Game is not active', 409);
-            }
-
-        if ($player->player_order != $room->current_turn)
-            {
-                throw new DomainException('Its not your move now', 409); 
-            }
-
-        if ($otherPlayer == null)
-            {
-                throw new DomainException('Not other player', 409);
-            }
-        
-        if ($room->maze[$player->y][$player->x] != 0)
-            {
-                throw new DomainException('Theres a wall there', 409); 
-            }
     }
 }
