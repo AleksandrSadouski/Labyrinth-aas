@@ -84,7 +84,7 @@ class RoomService
             {
                 throw new DomainException('Room has already started the game', 409);
             }
-        if ($room->players->count() >= 2)
+        if ($room->players->count() >= Room::MAX_PLAYERS)
             {
                 throw new DomainException('Room is occupied', 409);
             }

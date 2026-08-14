@@ -3,15 +3,16 @@ namespace App\Services;
 
 class CodeGeneratorService
 {
-    private string $bukvar = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private const BUKVAR = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private const CODE_LENGTH = 6;
 
     public function generate(): string
     {
         $roomCode = '';
-        for ($i = 0; $i < 6; $i++)
+        for ($i = 0; $i < self::CODE_LENGTH; $i++)
         {
-        $randIndex = random_int(0, strlen($this->bukvar) - 1);
-        $roomCode = $roomCode . $this->bukvar[$randIndex];
+        $randIndex = random_int(0, strlen(self::BUKVAR) - 1);
+        $roomCode = $roomCode . self::BUKVAR[$randIndex];
         }
         return $roomCode;
     }

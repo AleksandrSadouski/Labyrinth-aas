@@ -15,6 +15,8 @@ class MoveService
 {
     private CheckResultService $checkResultService;
 
+    private const MAX_MOVE_STEP = 1;
+
     public function __construct(CheckResultService $checkResultService)
     {
         $this->checkResultService = $checkResultService;
@@ -50,7 +52,7 @@ class MoveService
                 throw new DomainException('Theres a wall there', 409); 
             }
 
-        if (abs($player->x - $new_x) > 1 || abs($player->y - $new_y) > 1)
+        if (abs($player->x - $new_x) > self::MAX_MOVE_STEP || abs($player->y - $new_y) > self::MAX_MOVE_STEP)
             {
                 throw new DomainException('Incorrect: you can only move one cell', 409); 
             }

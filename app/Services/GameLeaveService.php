@@ -35,7 +35,7 @@ class GameLeaveService
         
         $player->delete();
 
-        if($room->players()->count() == 0)
+        if($room->players()->count() < Room::MIN_PLAYERS)
             {
                 $room->delete();
                 return null;
@@ -58,7 +58,7 @@ class GameLeaveService
             {
                 throw new DomainException('Cant cancel: game has already begun', 409);
             }
-        if ($room->players->count() > 1)
+        if ($room->players->count() > Room::MIN_PLAYERS)
             {
                 throw new DomainException('Cant cancel: player is alredy join', 409);
             }
