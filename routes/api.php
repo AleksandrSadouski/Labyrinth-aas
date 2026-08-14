@@ -10,17 +10,17 @@ Route::post('/auth/login', [AuthController::class, 'loginProfile']);
 Route::post('/auth/register', [AuthController::class, 'registerProfile']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::delete('/menu/logout', [MenuController::class, 'exitProfile']);
-    Route::delete('/menu/delete', [MenuController::class, 'deleteProfile']);
-    Route::post('/menu/editor', [MenuController::class, 'createRoom']);
-    Route::post('/menu/join', [MenuController::class, 'joinRoom']);
-    Route::get('/menu/stats', [MenuController::class, 'showStatsProfile']);
-    Route::patch('/menu/name', [MenuController::class, 'renameProfile']);
-    Route::get('/menu/leaderboard/rating', [MenuController::class, 'showLeaderboardRating']);
+    Route::delete('/menu/logout', [MenuController::class, 'exitProfile'])->middleware('throttle:30,1');
+    Route::delete('/menu/delete', [MenuController::class, 'deleteProfile'])->middleware('throttle:1,1');
+    Route::post('/menu/editor', [MenuController::class, 'createRoom'])->middleware('throttle:10,1');
+    Route::post('/menu/join', [MenuController::class, 'joinRoom'])->middleware('throttle:30,1');
+    Route::get('/menu/stats', [MenuController::class, 'showStatsProfile'])->middleware('throttle:60,1');
+    Route::patch('/menu/name', [MenuController::class, 'renameProfile'])->middleware('throttle:5,1');
+    Route::get('/menu/leaderboard/rating', [MenuController::class, 'showLeaderboardRating'])->middleware('throttle:60,1');
 
-    Route::post('/game/moves', [GameController::class, 'makeMove']);
-    Route::post('/game/message', [GameController::class, 'writeMessage']);
-    Route::post('/game/exit', [GameController::class, 'exitRoom']);
-    Route::delete('/game/cancel', [GameController::class, 'cancelRoom']);
-    Route::get('/poll', [GameController::class, 'checkRoom']);
+    Route::post('/game/moves', [GameController::class, 'makeMove'])->middleware('throttle:80,1');
+    Route::post('/game/message', [GameController::class, 'writeMessage'])->middleware('throttle:30,1');
+    Route::post('/game/exit', [GameController::class, 'exitRoom'])->middleware('throttle:30,1');
+    Route::delete('/game/cancel', [GameController::class, 'cancelRoom'])->middleware('throttle:30,1');
+    Route::get('/poll', [GameController::class, 'checkRoom'])->middleware('throttle:30,1');
 });
