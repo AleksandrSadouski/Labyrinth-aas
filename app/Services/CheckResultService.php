@@ -5,6 +5,7 @@ use App\Models\Player;
 use App\Models\Room;
 use App\Models\Profile;
 use App\Services\UpdateStatsService;
+use App\Enums\RoomStatus;
 
 class CheckResultService
 {
@@ -66,7 +67,7 @@ class CheckResultService
 
     public function checkResultExit(Player $player, Player $otherPlayer, Room $room, Profile $profile): void
     {
-        if($room->status == 'active')
+        if($room->status == RoomStatus::Active)
             {
                 $this->updateStatsService->updateStats('lose', $player, $otherPlayer, $room, $profile);
             }

@@ -5,6 +5,7 @@ use App\Models\Profile;
 use App\Http\Resources\ProfileResource;
 use App\Services\UpdateStatsService;
 use Illuminate\Support\Facades\Hash;
+use App\Enums\RoomStatus;
 
 use DomainException;
 
@@ -24,7 +25,7 @@ class ProfileService
                 throw new DomainException('Incorrect password', 401);
             }
             
-        if ($profile->player && $profile->player->room && $profile->player->room->status == 'active')
+        if ($profile->player && $profile->player->room && $profile->player->room->status == RoomStatus::Active)
             {
                 $otherPlayer = $profile->player->room->players->where('id', '!=', $profile->player->id)->first();
                 $this->updateStatsService->updateStats('lose', $profile->player, $otherPlayer, $profile->player->room, $profile);

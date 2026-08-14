@@ -6,6 +6,7 @@ use App\Models\Room;
 use App\Models\Profile;
 use App\Services\EloService;
 use Illuminate\Support\Facades\DB;
+use App\Enums\RoomStatus;
 
 class UpdateStatsService
 {
@@ -48,7 +49,7 @@ class UpdateStatsService
 
     public function updateRoom(string $key, Player $player, Room $room): void
     {
-        $room->status = 'finished';
+        $room->status = RoomStatus::Finished;
         $room->current_turn = 0;
 
         if($key == 'draw')

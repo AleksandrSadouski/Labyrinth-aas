@@ -8,6 +8,7 @@ use App\Services\MazeService;
 use App\Services\CodeGeneratorService;
 use App\Http\Resources\RoomResource;
 use Illuminate\Support\Facades\DB;
+use App\Enums\RoomStatus;
 
 use DomainException;
 
@@ -79,7 +80,7 @@ class RoomService
             {
                 throw new DomainException('Room not found', 404);
             }
-        if ($room->status != 'waiting')
+        if ($room->status != RoomStatus::Waiting)
             {
                 throw new DomainException('Room has already started the game', 409);
             }
@@ -104,7 +105,7 @@ class RoomService
         $player->y = $room->entry_y;
         $player->save();
 
-        $room->status = 'active';
+        $room->status = RoomStatus::Active;
         $room->save();
         $room->load('players');
         });

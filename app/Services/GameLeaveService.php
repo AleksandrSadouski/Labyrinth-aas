@@ -7,6 +7,7 @@ use App\Models\Player;
 use App\Models\Room;
 use App\Services\CheckResultService;
 use App\Http\Resources\RoomResource;
+use App\Enums\RoomStatus;
 
 use DomainException;
 
@@ -53,7 +54,7 @@ class GameLeaveService
                 throw new DomainException('Code wasnt transmitted', 404);
             }
         
-        if($room->status != 'waiting')
+        if($room->status != RoomStatus::Waiting)
             {
                 throw new DomainException('Cant cancel: game has already begun', 409);
             }

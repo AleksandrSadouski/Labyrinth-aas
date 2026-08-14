@@ -7,6 +7,7 @@ use App\Models\Profile;
 use App\Services\CheckResultService;
 use App\Http\Resources\RoomResource;
 use Illuminate\Support\Facades\DB;
+use App\Enums\RoomStatus;
 
 use DomainException;
 
@@ -29,7 +30,7 @@ class MoveService
             }
         $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
 
-        if($room->status != 'active')
+        if($room->status != RoomStatus::Active)
             {
                 throw new DomainException('Game is not active', 409);
             }
