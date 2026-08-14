@@ -13,7 +13,7 @@ class PollingService
 {
     public function poll(string $code): RoomResource
     {
-        $room = Room::with('players.messages')->where('code', $code)->first();
+        $room = Room::with(['players.profile', 'players.messages'])->where('code', $code)->first();
         if(!$room)
             {
                 throw new DomainException('Code wasnt transmitted', 404);

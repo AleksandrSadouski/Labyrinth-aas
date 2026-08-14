@@ -13,4 +13,9 @@ class Message extends Model
     {
         return $this->belongsTo(Player::class, 'player_id');
     }
+
+    public function getPlayerNameAttribute(): string
+    {
+        return $this->player->profile->name;
+    }
 }
