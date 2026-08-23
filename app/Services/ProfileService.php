@@ -43,6 +43,12 @@ class ProfileService
 
     public function exit(Profile $profile): void
     {
+        if ($profile->player && $profile->player->room && $profile->player->room->status == RoomStatus::Active)
+            {
+                $otherPlayer = $profile->player->room->players->where('id', '!=', $profile->player->id)->first();
+                $this->updateStatsService->updateStats('lose', $profile->player, $otherPlayer, $profile->player->room, $profile);
+                $profile->player->delete();
+            }
         $profile->currentAccessToken()->delete();
     }
 
