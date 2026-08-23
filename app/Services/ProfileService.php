@@ -33,20 +33,15 @@ class ProfileService
         $profile->delete();
     }
 
-    public function rename(Profile $profile, string $newName): ProfileResource
+    public function rename(Profile $profile, string $newName): Profile
     {
         $profile->name = $newName;
         $profile->save();
-        return new ProfileResource($profile);
+        return $profile;
     }
 
     public function exit(Profile $profile): void
     {
         $profile->currentAccessToken()->delete();
-    }
-
-    public function showStats(Profile $profile): ProfileResource
-    {
-        return new ProfileResource($profile);
     }
 }

@@ -47,14 +47,15 @@ class MenuController extends Controller
     {
         return response()->json(['status' => 'success',
         'message' => 'Show stats',
-        'data' => $this->profileService->showStats($request->user())], 200);
+        'data' => new ProfileResource($request->user())], 200);
     }
 
     public function renameProfile(RenameRequest $request)
     {
+        $profile = $this->profileService->rename($request->user(), $request->input('new_name'));
         return response()->json(['status' => 'success',
         'message' => 'Profile renamed',
-        'data' => $this->profileService->rename($request->user(), $request->input('new_name'))], 200);
+        'data' => new ProfileResource($profile)], 200);
     }
 
     public function showLeaderboardRating(Request $request)
@@ -67,16 +68,19 @@ class MenuController extends Controller
 
     public function createRoom(CreateRoomRequest $request)
     {
+        $room = $this->roomService->create($request->user(), $request->input('size'),
+        $request->input('branch_weight'), $request->input('hallway_weight'));
+
         return response()->json(['status' => 'success',
         'message' => 'Successful creation room',
-        'data' => $this->roomService->create($request->user(), $request->input('size'),
-        $request->input('branch_weight'), $request->input('hallway_weight'))], 200);
+        'data' => new RoomResource($room)], 200);
     }
 
     public function joinRoom(JoinRoomRequest $request)
     {
+        $room = $this->roomService->join($request->user(), $request->input('code'));
         return response()->json(['status' => 'success',
         'message' => 'Successful connection',
-        'data' => $this->roomService->join($request->user(), $request->input('code'))], 200);
+        'data' => new RoomResource($room)], 200);
     }
 }

@@ -20,7 +20,7 @@ class RoomService
         $this->codeGeneratorService = $codeGeneratorService;
     }
 
-    public function create(Profile $profile, int $size, float $branch_weight, float $hallway_weight): RoomResource
+    public function create(Profile $profile, int $size, float $branch_weight, float $hallway_weight): Room
     {
         if ($profile->player != null && $profile->player->room_id != null)
             {
@@ -30,7 +30,7 @@ class RoomService
         $room = $this->setupRoomAndPlayerforCreate($profile, $size, $branch_weight, $hallway_weight);
         $room->load('players');
 
-        return new RoomResource($room);
+        return $room;
     }
 
     private function setupRoomAndPlayerforCreate(Profile $profile, int $size, float $branch_weight, float $hallway_weight): Room
@@ -66,7 +66,7 @@ class RoomService
         return $room;
     }
 
-    public function join(Profile $profile, string $code): RoomResource
+    public function join(Profile $profile, string $code): Room
     {
         if ($profile->player != null && $profile->player->room_id != null)
             {
@@ -90,7 +90,7 @@ class RoomService
 
         $room = $this->setupRoomAndPlayerforJoin($profile, $room);
 
-        return new RoomResource($room);
+        return $room;
     }
 
     private function setupRoomAndPlayerforJoin(Profile $profile, Room $room): Room
