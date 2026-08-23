@@ -32,15 +32,19 @@ class GameController extends Controller
 
     public function makeMove(Request $request)
     {
-        return response()->json($this->moveService->move($request->user(), $request->input('code'), 
-        $request->input('new_x'), $request->input('new_y')), 200);
+        $answer = $this->moveService->move($request->user(), $request->input('code'), 
+        $request->input('new_x'), $request->input('new_y'));
+        return response()->json(['status' => 'success',
+        'message' => $answer['message'],
+        'data' => new RoomResource($answer['room'])], 200);
     }
 
     public function exitRoom(Request $request)
     {
+        $room = $this->gameLeaveService->exit($request->user(), $request->input('code'));
         return response()->json(['status' => 'success',
         'message' => 'Player succesfuly exit room',
-        'data' => $this->gameLeaveService->exit($request->user(), $request->input('code'))], 200);
+        'data' => $room ? new RoomResource($room) : null], 200);
     }
 
     public function cancelRoom(Request $request)
@@ -52,15 +56,17 @@ class GameController extends Controller
 
     public function writeMessage(MessageRequest $request)
     {
+        $message = $this->messageService->write($request->user(), $request->input('message'));
         return response()->json(['status' => 'success',
         'message' => 'Message sent',
-        'data' => $this->messageService->write($request->user(), $request->input('message'))], 200);
+        'data' => new MessageResource($message)], 200);
     }
 
     public function checkRoom(Request $request)
     {
+        $room = $this->pollingService->poll($request->query('code'));
         return response()->json(['status' => 'success',
         'message' => 'Successful polling',
-        'data' => $this->pollingService->poll($request->query('code'))], 200);
+        'data' => new RoomResource($room)], 200);
     }
 }

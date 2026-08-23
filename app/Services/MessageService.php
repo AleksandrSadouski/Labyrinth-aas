@@ -11,7 +11,7 @@ use DomainException;
 
 class MessageService
 {
-    public function write(Profile $profile, string $new_message)
+    public function write(Profile $profile, string $new_message): Message
     {
         $player = $profile->player;
         if ($player == null) 
@@ -23,6 +23,6 @@ class MessageService
         $message->message = $new_message;
         $message->save();
 
-        return new MessageResource($message);
+        return $message;
     }
 }

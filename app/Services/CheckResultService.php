@@ -23,25 +23,15 @@ class CheckResultService
                 if($player->player_order == 2 && $room->first_finished == false)
                     {
                 $this->updateStatsService->updateStats('win', $player, $otherPlayer, $room, $profile);
-                return $answer = ['status' => 'success',
-                'message' => 'You win!',
-                'new_x' => $player->x,
-                'new_y' => $player->y,
-                'current_turn' => $room->current_turn,
-                'winner' => $room->winner_order,
-                'draw' => $room->draw];
+                return $answer = ['message' => 'You win!',
+                'room' => $room];
                     }
 
                 elseif($player->player_order == 2 && $room->first_finished == true)
                     {
                 $this->updateStatsService->updateStats('draw', $player, $otherPlayer, $room, $profile);
-                return $answer = ['status' => 'success',
-                'message' => 'Draw',
-                'new_x' => $player->x,
-                'new_y' => $player->y,
-                'current_turn' => $room->current_turn,
-                'winner' => $room->winner_order,
-                'draw' => $room->draw];
+                return $answer = ['message' => 'Draw',
+                'room' => $room];
                 }
 
                 elseif($player->player_order == 1)
@@ -54,13 +44,8 @@ class CheckResultService
         elseif($player->player_order == 2 && $room->first_finished == true)
             {
                 $this->updateStatsService->updateStats('lose', $player, $otherPlayer, $room, $profile);
-                return $answer = ['status' => 'success',
-                'message' => 'You lose!',
-                'new_x' => $player->x,
-                'new_y' => $player->y,
-                'current_turn' => $room->current_turn,
-                'winner' => $room->winner_order,
-                'draw' => $room->draw];
+                return $answer = ['message' => 'You lose!',
+                'room' => $room];
             }
             else return $answer = null;
     }

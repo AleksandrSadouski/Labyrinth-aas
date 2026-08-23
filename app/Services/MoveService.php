@@ -5,7 +5,6 @@ use App\Models\Player;
 use App\Models\Room;
 use App\Models\Profile;
 use App\Services\CheckResultService;
-use App\Http\Resources\RoomResource;
 use Illuminate\Support\Facades\DB;
 use App\Enums\RoomStatus;
 
@@ -71,9 +70,8 @@ class MoveService
         $this->changeOfTurn($player, $room);  
         $room->save();
 
-        return ['status' => 'success',
-        'message' => 'Move made',
-        'data' => new RoomResource($room)];
+        return $answer = ['message' => 'Move made',
+        'room' => $room];
     }
 
     private function changeOfTurn(Player $player, Room $room): void

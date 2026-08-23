@@ -6,7 +6,6 @@ use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
 use App\Services\CheckResultService;
-use App\Http\Resources\RoomResource;
 use App\Enums\RoomStatus;
 
 use DomainException;
@@ -43,7 +42,7 @@ class GameLeaveService
 
         else 
         {$room->save();
-        return new RoomResource($room);}
+        return $room;}
     }
 
     public function cancel(string $code): void
