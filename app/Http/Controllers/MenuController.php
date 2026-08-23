@@ -12,6 +12,8 @@ use App\Http\Requests\JoinRoomRequest;
 use App\Http\Requests\CreateRoomRequest;
 use App\Http\Requests\RenameRequest;
 use App\Http\Requests\DeleteRequest;
+use App\Http\Requests\StatsOtherRequest;
+use App\Http\Requests\PasswordRequest;
 use App\Http\Resources\RoomResource;
 use App\Http\Resources\ProfileResource;
 use App\Http\Resources\LeaderboardResource;
@@ -50,12 +52,27 @@ class MenuController extends Controller
         'data' => new ProfileResource($request->user())], 200);
     }
 
+    public function showStatsOtherProfile(StatsOtherRequest $request)
+    {
+        $profile = $this->profileService->showProfile($request->query('profile_name'));
+        return response()->json(['status' => 'success',
+        'message' => 'Show stats',
+        'data' => new ProfileResource($profile)], 200);
+    }
+
     public function renameProfile(RenameRequest $request)
     {
         $profile = $this->profileService->rename($request->user(), $request->input('new_name'));
         return response()->json(['status' => 'success',
         'message' => 'Profile renamed',
         'data' => new ProfileResource($profile)], 200);
+    }
+
+    public function changePassword(PasswordRequest $request)
+    {
+        $this->profileService->changePassword($request->user(), $request->input('old_password'), $request->input('new_password'));
+        return response()->json(['status' => 'success',
+        'message' => 'Password changed'], 200);
     }
 
     public function showLeaderboardRating(Request $request)
