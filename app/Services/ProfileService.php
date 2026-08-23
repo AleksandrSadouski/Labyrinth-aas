@@ -2,7 +2,6 @@
 namespace App\Services;
 
 use App\Models\Profile;
-use App\Http\Resources\ProfileResource;
 use App\Services\UpdateStatsService;
 use Illuminate\Support\Facades\Hash;
 use App\Enums\RoomStatus;

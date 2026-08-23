@@ -12,6 +12,9 @@ use App\Http\Requests\JoinRoomRequest;
 use App\Http\Requests\CreateRoomRequest;
 use App\Http\Requests\RenameRequest;
 use App\Http\Requests\DeleteRequest;
+use App\Http\Resources\RoomResource;
+use App\Http\Resources\ProfileResource;
+use App\Http\Resources\LeaderboardResource;
 
 class MenuController extends Controller
 {
@@ -56,9 +59,10 @@ class MenuController extends Controller
 
     public function showLeaderboardRating(Request $request)
     {
+        $profiles = $this->leaderboardService->getProfiles('max_rating_top', 'rating', 10);
         return response()->json(['status' => 'success',
         'message' => 'Show Leaderboard',
-        'data' => $this->leaderboardService->show('max_rating_top', 'rating', 10)], 200);
+        'data' => LeaderboardResource::collection($profiles)], 200);
     }
 
     public function createRoom(CreateRoomRequest $request)

@@ -6,7 +6,6 @@ use App\Models\Player;
 use App\Models\Room;
 use App\Services\MazeService;
 use App\Services\CodeGeneratorService;
-use App\Http\Resources\RoomResource;
 use Illuminate\Support\Facades\DB;
 use App\Enums\RoomStatus;
 

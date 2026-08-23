@@ -19,5 +19,5 @@ class Room extends Model
     public function players()
     {
         return $this->hasMany(Player::class, 'room_id');
-    }    
+    }
 }

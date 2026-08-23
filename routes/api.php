@@ -22,5 +22,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/game/message', [GameController::class, 'writeMessage'])->middleware('throttle:30,1');
     Route::post('/game/exit', [GameController::class, 'exitRoom'])->middleware('throttle:30,1');
     Route::delete('/game/cancel', [GameController::class, 'cancelRoom'])->middleware('throttle:30,1');
+    
     Route::get('/poll', [GameController::class, 'checkRoom'])->middleware('throttle:30,1');
 });

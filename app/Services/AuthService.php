@@ -3,7 +3,6 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use App\Models\Profile;
-use App\Http\Resources\ProfileResource;
 use Illuminate\Support\Facades\Hash;
 
 use DomainException;
@@ -19,7 +18,7 @@ class AuthService
             }
         $profile->tokens()->delete();
         $token = $profile->createToken('auth-token')->plainTextToken;
-        return ['resource' => new ProfileResource($profile), 
+        return ['profile' => $profile, 
         'token' => $token];
     }
 
@@ -30,7 +29,7 @@ class AuthService
         $profile->password = Hash::make($password);
         $profile->save();
         $token = $profile->createToken('auth-token')->plainTextToken;
-        return ['resource' => new ProfileResource($profile), 
+        return ['profile' => $profile, 
         'token' => $token];
     }
 }

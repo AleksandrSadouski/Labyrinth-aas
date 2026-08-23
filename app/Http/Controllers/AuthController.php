@@ -7,6 +7,7 @@ use App\Models\Profile;
 use App\Services\AuthService;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\ProfileResource;
 
 
 class AuthController extends Controller
@@ -23,7 +24,7 @@ class AuthController extends Controller
         $answer = $this->authService->login($request->input('name'), $request->input('password'));
         return response()->json(['status' => 'success',
         'message' => 'Successful login to profile',
-        'data' => $answer['resource'], 
+        'data' => new ProfileResource($answer['profile']), 
         'token' => $answer['token']], 200);     
     }
     
@@ -32,7 +33,7 @@ class AuthController extends Controller
         $answer = $this->authService->register($request->input('name'), $request->input('password'));
         return response()->json(['status' => 'success',
         'message' => 'Successful profile creation',
-        'data' => $answer['resource'], 
+        'data' => new ProfileResource($answer['profile']), 
         'token' => $answer['token']], 200);
     }
 }
