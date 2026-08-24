@@ -5,6 +5,7 @@ use App\Models\Profile;
 use App\Services\UpdateStatsService;
 use Illuminate\Support\Facades\Hash;
 use App\Enums\RoomStatus;
+use Illuminate\Support\Facades\DB;
 
 
 use DomainException;
@@ -25,10 +26,9 @@ class ProfileService
                 throw new DomainException('Incorrect password', 401);
             }
             
-        if ($profile->player && $profile->player->room && $profile->player->room->status == RoomStatus::Active)
+        if ($profile->player)
             {
-                $otherPlayer = $profile->player->room->players->where('id', '!=', $profile->player->id)->first();
-                $this->updateStatsService->updateStats('lose', $profile->player, $otherPlayer, $profile->player->room, $profile);
+                throw new DomainException('Impossible: player in room', 409);
             }
         $profile->tokens()->delete();
         $profile->delete();
@@ -43,11 +43,9 @@ class ProfileService
 
     public function exit(Profile $profile): void
     {
-        if ($profile->player && $profile->player->room && $profile->player->room->status == RoomStatus::Active)
+        if ($profile->player)
             {
-                $otherPlayer = $profile->player->room->players->where('id', '!=', $profile->player->id)->first();
-                $this->updateStatsService->updateStats('lose', $profile->player, $otherPlayer, $profile->player->room, $profile);
-                $profile->player->delete();
+                throw new DomainException('Impossible: player in room', 409);
             }
         $profile->currentAccessToken()->delete();
     }
@@ -70,6 +68,28 @@ class ProfileService
             {
                 throw new DomainException('Not found profile', 404);
             }
+
+        return $profile;
+    }
+
+    public function reset(Profile $profile, string $password): Profile
+    {
+        if (!Hash::check($password, $profile->password))
+            {
+                throw new DomainException('Incorrect password', 401);
+            }
+        
+        if ($profile->player)
+            {
+                throw new DomainException('Impossible: player in room', 409);
+            }
+            
+        $profile->rating = 150;
+        $profile->game_total = 0;
+        $profile->win_total = 0;
+        $profile->draw_total = 0;
+        $profile->lose_total = 0;
+        $profile->save();
 
         return $profile;
     }

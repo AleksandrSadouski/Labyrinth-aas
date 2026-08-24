@@ -75,6 +75,14 @@ class MenuController extends Controller
         'message' => 'Password changed'], 200);
     }
 
+    public function resetProfile(DeleteRequest $request)
+    {
+        $profile = $this->profileService->reset($request->user(), $request->input('password'));
+        return response()->json(['status' => 'success',
+        'message' => 'Profile reseted',
+        'data' => new ProfileResource($profile)], 200);
+    }
+
     public function showLeaderboardRating(Request $request)
     {
         $profiles = $this->leaderboardService->getProfiles('max_rating_top', 'rating', 10);
