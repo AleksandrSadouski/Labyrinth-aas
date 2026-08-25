@@ -31,7 +31,7 @@ class GameLeaveService
         $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
 
         $this->checkResultService->checkResultExit($player, $otherPlayer, $room, $profile);
-        
+
         $player->delete();
 
         if($room->players()->count() < Room::MIN_PLAYERS)

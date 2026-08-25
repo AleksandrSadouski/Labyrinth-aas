@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\PlayerResource;
+use App\Http\Resources\GameHistoryResource;
 
 class ProfileResource extends JsonResource
 {
@@ -17,6 +18,7 @@ class ProfileResource extends JsonResource
         'win_total' => $this->win_total,
         'draw_total' => $this->draw_total,
         'lose_total' => $this->lose_total,
-        'player' => new PlayerResource($this->whenLoaded('player'))];
+        'player' => new PlayerResource($this->whenLoaded('player')),
+        'game_history' => GameHistoryResource::collection($this->whenLoaded('gameHistories'))];
     }
 }

@@ -13,5 +13,10 @@ class Profile extends Model
     public function player()
     {
         return $this->hasOne(Player::class, 'profile_id');
-    }    
+    }
+
+    public function gameHistories()
+    {
+        return $this->hasMany(GameHistory::class, 'profile_id');
+    }
 }

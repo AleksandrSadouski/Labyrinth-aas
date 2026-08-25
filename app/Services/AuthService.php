@@ -11,7 +11,7 @@ class AuthService
 {
     public function login(string $name, string $password): array
     {
-        $profile = Profile::with('player')->where('name', $name)->first();
+        $profile = Profile::with(['player', 'gameHistories'])->where('name', $name)->first();
         if (!$profile || !Hash::check($password, $profile->password))
             {
                 throw new DomainException('Incorrect data', 401);

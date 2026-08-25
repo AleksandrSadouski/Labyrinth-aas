@@ -89,6 +89,7 @@ class ProfileService
         $profile->win_total = 0;
         $profile->draw_total = 0;
         $profile->lose_total = 0;
+        $profile->gameHistories->delete();
         $profile->save();
 
         return $profile;
