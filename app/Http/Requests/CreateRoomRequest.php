@@ -14,7 +14,8 @@ class CreateRoomRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['size' => 'required|integer|min:10|max:1000',
+        return ['room_type' => 'required|string|in:pvplocal,pvppublic',
+        'size' => 'required|integer|min:10|max:1000',
         'branch_weight' => 'required|numeric|min:0|max:1',
         'hallway_weight' => 'required|numeric|min:0|max:1'];
     }

@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->string('code', 6)->unique();
+            $table->string('room_type');
             $table->json('maze');
             $table->integer('size');
             $table->float('branch_weight');

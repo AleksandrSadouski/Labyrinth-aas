@@ -14,6 +14,13 @@ class JoinRoomRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['code' => 'required|string|size:6'];
+        $rules = ['room_type' => 'required|string|in:pvplocal,pvppublic'];
+        
+        if ($this->input('room_type') == 'pvplocal') 
+            {
+                $rules['code'] = 'required|string|size:6';
+            }
+        
+        return $rules;
     }
 }

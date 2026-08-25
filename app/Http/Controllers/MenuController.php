@@ -93,7 +93,7 @@ class MenuController extends Controller
 
     public function createRoom(CreateRoomRequest $request)
     {
-        $room = $this->roomService->create($request->user(), $request->input('size'),
+        $room = $this->roomService->create($request->user(), $request->input('room_type'), $request->input('size'),
         $request->input('branch_weight'), $request->input('hallway_weight'));
 
         return response()->json(['status' => 'success',
@@ -103,7 +103,8 @@ class MenuController extends Controller
 
     public function joinRoom(JoinRoomRequest $request)
     {
-        $room = $this->roomService->join($request->user(), $request->input('code'));
+        $room = $this->roomService->join($request->user(), $request->input('room_type'), 
+        $request->input('code'));
         return response()->json(['status' => 'success',
         'message' => 'Successful connection',
         'data' => new RoomResource($room)], 200);

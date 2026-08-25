@@ -8,6 +8,7 @@ use App\Services\MazeService;
 use App\Services\CodeGeneratorService;
 use Illuminate\Support\Facades\DB;
 use App\Enums\RoomStatus;
+use App\Enums\RoomType;
 
 use DomainException;
 
@@ -20,24 +21,31 @@ class RoomService
         $this->codeGeneratorService = $codeGeneratorService;
     }
 
-    public function create(Profile $profile, int $size, float $branch_weight, float $hallway_weight): Room
+    public function create(Profile $profile, string $room_type, int $size, float $branch_weight, float $hallway_weight): Room
     {
         if ($profile->player != null && $profile->player->room_id != null)
             {
                 throw new DomainException('Player in other room', 409);
             }
-        
-        $room = $this->setupRoomAndPlayerforCreate($profile, $size, $branch_weight, $hallway_weight);
+
+        $room_type = match ($room_type)
+        {
+            'pvplocal' => RoomType::PvPLocal,
+            'pvppublic' => RoomType::PvPPublic,
+        };
+
+        $room = $this->setupRoomAndPlayerforCreate($profile, $room_type, $size, $branch_weight, $hallway_weight);
         $room->load('players');
 
         return $room;
     }
 
-    private function setupRoomAndPlayerforCreate(Profile $profile, int $size, float $branch_weight, float $hallway_weight): Room
+    private function setupRoomAndPlayerforCreate(Profile $profile, RoomType $room_type, int $size, float $branch_weight, float $hallway_weight): Room
     {
         $room = new Room();
 
-        DB::transaction(function () use ($profile, $size, $branch_weight, $hallway_weight, $room) {
+        DB::transaction(function () use ($profile, $room_type, $size, $branch_weight, $hallway_weight, $room) {
+        $room->room_type = $room_type;
         $room->size = $size;
         $room->branch_weight = $branch_weight;
         $room->hallway_weight = $hallway_weight;
@@ -66,14 +74,14 @@ class RoomService
         return $room;
     }
 
-    public function join(Profile $profile, string $code): Room
+    public function join(Profile $profile, string $room_type, ?string $code = null): Room
     {
         if ($profile->player != null && $profile->player->room_id != null)
             {
                 throw new DomainException('Player in other room', 409);
             }
 
-        $room = Room::with('players')->where('code', $code)->first();
+        $room = $this->selectRoomType($profile, $room_type, $code);
 
         if (!$room)
             {
@@ -90,6 +98,27 @@ class RoomService
 
         $room = $this->setupRoomAndPlayerforJoin($profile, $room);
 
+        return $room;
+    }
+
+    private function selectRoomType(Profile $profile, string $room_type, ?string $code = null): Room
+    {
+        $room_type = match ($room_type)
+        {
+            'pvplocal' => RoomType::PvPLocal,
+            'pvppublic' => RoomType::PvPPublic,
+        };
+        
+        if ($room_type == RoomType::PvPLocal)
+            {
+                $room = Room::with('players')->where('code', $code)
+                ->where('room_type', RoomType::PvPLocal)->first();
+            }
+        elseif ($room_type == RoomType::PvPPublic && $code == null)
+            {
+                $room = Room::with('players')->where('room_type', RoomType::PvPPublic)
+                ->inRandomOrder()->first();
+            }
         return $room;
     }
 

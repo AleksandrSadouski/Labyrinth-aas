@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\RoomStatus;
+use App\Enums\RoomType;
 
 class Room extends Model
 {
@@ -14,7 +15,8 @@ class Room extends Model
     'entry_x', 'entry_y', 'exit_x', 'exit_y'];
 
     protected $casts = ['maze' => 'array',
-    'status' => RoomStatus::class];
+    'status' => RoomStatus::class,
+    'room_type' => RoomType::class];
 
     public function players()
     {
