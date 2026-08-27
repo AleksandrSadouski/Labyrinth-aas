@@ -117,7 +117,7 @@ Labyrinth-aas — это проект из серии работ '-aas', где 
 | PUT | `/api/menu/reset` | Сброс статистики и истории профиля |
 | PATCH | `/api/menu/name` | Смена имени профиля |
 | PATCH | `/api/menu/password` | Смена пароля |
-| GET | `/api/menu/leaderboard/rating` | Топ-10 игроков по рейтингу |
+| GET | `/api/menu/leaderboard?type_top=` | Топ-10 игроков по рейтингу |
 | POST | `/api/menu/editor` | Создание новой комнаты |
 | POST | `/api/menu/join` | Подключение к существующей комнате |
 | GET | `/api/menu/stats` | Показать статистику профиля |

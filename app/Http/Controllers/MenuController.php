@@ -15,6 +15,7 @@ use App\Http\Requests\RenameRequest;
 use App\Http\Requests\DeleteRequest;
 use App\Http\Requests\StatsOtherRequest;
 use App\Http\Requests\PasswordRequest;
+use App\Http\Requests\LeaderboardRequest;
 use App\Http\Resources\RoomResource;
 use App\Http\Resources\ProfileResource;
 use App\Http\Resources\LeaderboardResource;
@@ -87,12 +88,12 @@ class MenuController extends Controller
         'data' => new ProfileResource($profile)], 200);
     }
 
-    public function showLeaderboardRating(Request $request)
+    public function showLeaderboard(LeaderboardRequest $request)
     {
-        $profiles = $this->leaderboardService->getProfiles('max_rating_top', 'rating', 10);
+        $leaderboard = $this->leaderboardService->getLeaderboard($request->query('type_top'));
         return response()->json(['status' => 'success',
         'message' => 'Show Leaderboard',
-        'data' => LeaderboardResource::collection($profiles)], 200);
+        'data' => LeaderboardResource::collection($leaderboard)], 200);
     }
 
     public function createRoom(CreateRoomRequest $request)

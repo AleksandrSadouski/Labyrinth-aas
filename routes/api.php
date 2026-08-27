@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/menu/name', [MenuController::class, 'renameProfile'])->middleware('throttle:5,1');
     Route::patch('/menu/password', [MenuController::class, 'changePassword'])->middleware('throttle:1,1');
     Route::put('/menu/reset', [MenuController::class, 'resetProfile'])->middleware('throttle:1,1');
-    Route::get('/menu/leaderboard/rating', [MenuController::class, 'showLeaderboardRating'])->middleware('throttle:60,1');
+    Route::get('/menu/leaderboard', [MenuController::class, 'showLeaderboard'])->middleware('throttle:60,1');
 
     Route::post('/game/moves', [GameController::class, 'makeMove'])->middleware('throttle:80,1');
     Route::post('/game/message', [GameController::class, 'writeMessage'])->middleware('throttle:30,1');
