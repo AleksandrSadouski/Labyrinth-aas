@@ -1,5 +1,5 @@
 <?php
-namespace App\Services;
+namespace App\Services\Menu;
 
 use App\Models\Profile;
 use Illuminate\Support\Facades\Cache;

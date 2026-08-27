@@ -1,11 +1,11 @@
 <?php
-namespace App\Services;
+namespace App\Services\Room;
 
 use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
-use App\Services\MazeService;
-use App\Services\CodeGeneratorService;
+use App\Services\Shared\MazeService;
+use App\Services\Shared\CodeGeneratorService;
 use Illuminate\Support\Facades\DB;
 use App\Enums\RoomStatus;
 use App\Enums\RoomType;

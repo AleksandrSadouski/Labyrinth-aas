@@ -1,8 +1,7 @@
 <?php
-namespace App\Services;
+namespace App\Services\Menu;
 
 use App\Models\Profile;
-use App\Services\UpdateStatsService;
 use Illuminate\Support\Facades\Hash;
 use App\Enums\RoomStatus;
 use Illuminate\Support\Facades\DB;
@@ -12,13 +11,6 @@ use DomainException;
 
 class ProfileService
 {
-    private UpdateStatsService $updateStatsService;
-
-    public function __construct(UpdateStatsService $updateStatsService)
-    {
-        $this->updateStatsService = $updateStatsService;
-    }
-
     public function delete(Profile $profile, string $password): void
     {
         if (!Hash::check($password, $profile->password))

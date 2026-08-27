@@ -1,11 +1,11 @@
 <?php
-namespace App\Services;
+namespace App\Services\PvP;
 
 use Illuminate\Http\Request;
 use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
-use App\Services\CheckResultService;
+use App\Services\PvP\CheckResultService;
 use App\Enums\RoomStatus;
 
 use DomainException;

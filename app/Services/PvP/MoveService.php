@@ -1,10 +1,10 @@
 <?php
-namespace App\Services;
+namespace App\Services\PvP;
 
 use App\Models\Player;
 use App\Models\Room;
 use App\Models\Profile;
-use App\Services\CheckResultService;
+use App\Services\PvP\CheckResultService;
 use Illuminate\Support\Facades\DB;
 use App\Enums\RoomStatus;
 

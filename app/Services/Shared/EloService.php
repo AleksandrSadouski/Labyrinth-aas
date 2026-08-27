@@ -1,5 +1,5 @@
 <?php
-namespace App\Services;
+namespace App\Services\Shared;
 
 use App\Models\Player;
 use App\Models\Room;

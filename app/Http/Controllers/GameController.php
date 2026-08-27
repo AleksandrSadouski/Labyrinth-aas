@@ -7,10 +7,10 @@ use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
 use App\Models\Message;
-use App\Services\MoveService;
-use App\Services\MessageService;
-use App\Services\GameLeaveService;
-use App\Services\PollingService;
+use App\Services\PvP\MoveService;
+use App\Services\PvP\MessageService;
+use App\Services\PvP\GameLeaveService;
+use App\Services\Shared\PollingService;
 use App\Http\Resources\RoomResource;
 use App\Http\Requests\MessageRequest;
 

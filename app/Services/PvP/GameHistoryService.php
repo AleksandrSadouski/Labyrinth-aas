@@ -1,5 +1,5 @@
 <?php
-namespace App\Services;
+namespace App\Services\PvP;
 
 use App\Models\Profile;
 use App\Models\GameHistory;

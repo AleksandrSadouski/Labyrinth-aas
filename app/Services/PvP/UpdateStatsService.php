@@ -1,10 +1,10 @@
 <?php
-namespace App\Services;
+namespace App\Services\PvP;
 
 use App\Models\Player;
 use App\Models\Room;
 use App\Models\Profile;
-use App\Services\EloService;
+use App\Services\Shared\EloService;
 use Illuminate\Support\Facades\DB;
 use App\Enums\RoomStatus;
 
