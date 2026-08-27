@@ -7,32 +7,30 @@ use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
 use App\Models\Message;
-use App\Services\PvP\MoveService;
-use App\Services\PvP\MessageService;
-use App\Services\PvP\GameLeaveService;
+use App\Services\Locators\GameLocator;
 use App\Services\Shared\PollingService;
+use App\Services\Shared\MessageService;
 use App\Http\Resources\RoomResource;
 use App\Http\Requests\MessageRequest;
 
 class GameController extends Controller
 {
-    private MoveService $moveService;
-    private MessageService $messageService;
-    private GameLeaveService $gameLeaveService;
+    private GameLocator $gameLocator;
     private PollingService $pollingService;
+    private MessageService $messageService;
 
-    public function __construct(MoveService $moveService, MessageService $messageService,
-    GameLeaveService $gameLeaveService, PollingService $pollingService)
+    public function __construct(GameLocator $gameLocator, 
+    PollingService $pollingService,
+    MessageService $messageService,)
     {
-        $this->moveService = $moveService;
-        $this->messageService = $messageService;
-        $this->gameLeaveService = $gameLeaveService;
+        $this->gameLocator = $gameLocator;
         $this->pollingService = $pollingService;
+        $this->messageService = $messageService;
     }
 
     public function makeMove(Request $request)
     {
-        $answer = $this->moveService->move($request->user(), $request->input('code'), 
+        $answer = $this->gameLocator->move($request->user(), $request->input('code'), 
         $request->input('new_x'), $request->input('new_y'));
         return response()->json(['status' => 'success',
         'message' => $answer['message'],
@@ -41,7 +39,7 @@ class GameController extends Controller
 
     public function exitRoom(Request $request)
     {
-        $room = $this->gameLeaveService->exit($request->user(), $request->input('code'));
+        $room = $this->gameLocator->exit($request->user(), $request->input('code'));
         return response()->json(['status' => 'success',
         'message' => 'Player succesfuly exit room',
         'data' => $room ? new RoomResource($room) : null], 200);
@@ -49,7 +47,7 @@ class GameController extends Controller
 
     public function cancelRoom(Request $request)
     {
-        $this->gameLeaveService->cancel($request->input('code'));
+        $this->gameLocator->cancel($request->input('code'));
         return response()->json(['status' => 'success',
         'message' => 'Room deleted'], 200);
     }

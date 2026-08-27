@@ -8,7 +8,7 @@ use App\Services\Shared\EloService;
 use Illuminate\Support\Facades\DB;
 use App\Enums\RoomStatus;
 
-class UpdateStatsService
+class PvPUpdateStatsService
 {
     private EloService $eloService;
 

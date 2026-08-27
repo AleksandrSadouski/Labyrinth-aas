@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('win_total')->default(0);
             $table->integer('draw_total')->default(0);
             $table->integer('lose_total')->default(0);
+            $table->integer('sp_game_completed')->default(0);
             $table->timestamps();
         });
     }

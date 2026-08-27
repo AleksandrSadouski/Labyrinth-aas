@@ -5,32 +5,26 @@ use Illuminate\Http\Request;
 use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
-use App\Services\PvP\CheckResultService;
+use App\Services\PvP\PvPCheckResultService;
 use App\Enums\RoomStatus;
 
 use DomainException;
 
-class GameLeaveService
+class PvPGameLeaveService
 {
-    private CheckResultService $checkResultService;
+    private PvPCheckResultService $pvpCheckResultService;
 
-    public function __construct(CheckResultService $checkResultService)
+    public function __construct(PvPCheckResultService $pvpCheckResultService)
     {
-        $this->checkResultService = $checkResultService;
+        $this->pvpCheckResultService = $pvpCheckResultService;
     }
 
-    public function exit(Profile $profile, string $code)
-    {
-        $room = Room::with('players')->where('code', $code)->first();
-        if(!$room)
-            {
-                throw new DomainException('Code wasnt transmitted', 404);
-            }
-        
+    public function exit(Profile $profile, Room $room)
+    {     
         $player = $profile->player;
         $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
 
-        $this->checkResultService->checkResultExit($player, $otherPlayer, $room, $profile);
+        $this->pvpCheckResultService->checkResultExit($player, $otherPlayer, $room, $profile);
 
         $player->delete();
 
@@ -45,14 +39,8 @@ class GameLeaveService
         return $room;}
     }
 
-    public function cancel(string $code): void
-    {
-        $room = Room::with('players')->where('code', $code)->first();
-        if(!$room)
-            {
-                throw new DomainException('Code wasnt transmitted', 404);
-            }
-        
+    public function cancel(Room $room): void
+    {      
         if($room->status != RoomStatus::Waiting)
             {
                 throw new DomainException('Cant cancel: game has already begun', 409);

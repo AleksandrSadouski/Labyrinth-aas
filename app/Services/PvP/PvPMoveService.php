@@ -4,31 +4,26 @@ namespace App\Services\PvP;
 use App\Models\Player;
 use App\Models\Room;
 use App\Models\Profile;
-use App\Services\PvP\CheckResultService;
+use App\Services\PvP\PvPCheckResultService;
 use Illuminate\Support\Facades\DB;
 use App\Enums\RoomStatus;
 
 use DomainException;
 
-class MoveService
+class PvPMoveService
 {
-    private CheckResultService $checkResultService;
+    private PvPCheckResultService $pvpCheckResultService;
 
     private const MAX_MOVE_STEP = 1;
 
-    public function __construct(CheckResultService $checkResultService)
+    public function __construct(PvPCheckResultService $pvpCheckResultService)
     {
-        $this->checkResultService = $checkResultService;
+        $this->pvpCheckResultService = $pvpCheckResultService;
     }
 
-    public function move(Profile $profile, string $code, int $new_x, int $new_y): array
+    public function move(Profile $profile, Room $room, int $new_x, int $new_y): array
     {
         $player = $profile->player;
-        $room = Room::with('players')->where('code', $code)->first();
-        if(!$room)
-            {
-                throw new DomainException('Code wasnt transmitted', 404);
-            }
         $otherPlayer = $room->players->where('id', '!=', $player->id)->first();
 
         if($room->status != RoomStatus::Active)
@@ -61,7 +56,7 @@ class MoveService
         
         $player->save();
 
-        $answer = $this->checkResultService->checkResultMove($player, $otherPlayer, $room, $profile);
+        $answer = $this->pvpCheckResultService->checkResultMove($player, $otherPlayer, $room, $profile);
         if($answer != null)
             {
                 return $answer;

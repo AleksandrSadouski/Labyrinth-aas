@@ -4,7 +4,7 @@ namespace App\Services\PvP;
 use App\Models\Profile;
 use App\Models\GameHistory;
 
-class GameHistoryService
+class PvPGameHistoryService
 {
     public function createHistory(string $key, Profile $profile, Profile $profile_opponent): void
     {

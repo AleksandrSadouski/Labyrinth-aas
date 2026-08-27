@@ -32,6 +32,7 @@ class CreateRoomService
         {
             'pvplocal' => RoomType::PvPLocal,
             'pvppublic' => RoomType::PvPPublic,
+            'sp' => RoomType::SP,
         };
 
         $room = $this->setupRoomAndPlayerforCreate($profile, $room_type, $size, $branch_weight, $hallway_weight);
@@ -45,6 +46,10 @@ class CreateRoomService
 
         DB::transaction(function () use ($profile, $room_type, $size, $branch_weight, $hallway_weight, $room) {
         $room->room_type = $room_type;
+        if ($room->room_type == RoomType::SP)
+            {
+                $room->status = RoomStatus::Active;
+            }
         $room->size = $size;
         $room->branch_weight = $branch_weight;
         $room->hallway_weight = $hallway_weight;

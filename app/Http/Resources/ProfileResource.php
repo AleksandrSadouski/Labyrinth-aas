@@ -18,6 +18,7 @@ class ProfileResource extends JsonResource
         'win_total' => $this->win_total,
         'draw_total' => $this->draw_total,
         'lose_total' => $this->lose_total,
+        'sp_game_completed' => $this->sp_game_completed,
         'player' => new PlayerResource($this->whenLoaded('player')),
         'game_history' => GameHistoryResource::collection($this->whenLoaded('gameHistories'))];
     }
