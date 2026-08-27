@@ -7,7 +7,8 @@ use App\Models\Player;
 use App\Models\Room;
 use App\Services\ProfileService;
 use App\Services\LeaderboardService;
-use App\Services\RoomService;
+use App\Services\CreateRoomService;
+use App\Services\JoinRoomService;
 use App\Http\Requests\JoinRoomRequest;
 use App\Http\Requests\CreateRoomRequest;
 use App\Http\Requests\RenameRequest;
@@ -22,13 +23,16 @@ class MenuController extends Controller
 {
     private ProfileService $profileService;
     private LeaderboardService $leaderboardService;
-    private RoomService $roomService;
+    private CreateRoomService $createRoomService;
+    private JoinRoomService $joinRoomService;
 
-    public function __construct(ProfileService $profileService, LeaderboardService $leaderboardService, RoomService $roomService)
+    public function __construct(ProfileService $profileService, LeaderboardService $leaderboardService, 
+    CreateRoomService $createRoomService, JoinRoomService $joinRoomService)
     {
         $this->profileService = $profileService;
         $this->leaderboardService = $leaderboardService;
-        $this->roomService = $roomService;
+        $this->createRoomService = $createRoomService;
+        $this->joinRoomService = $joinRoomService;
     }
 
     public function exitProfile(Request $request)
@@ -93,7 +97,7 @@ class MenuController extends Controller
 
     public function createRoom(CreateRoomRequest $request)
     {
-        $room = $this->roomService->create($request->user(), $request->input('room_type'), $request->input('size'),
+        $room = $this->createRoomService->create($request->user(), $request->input('room_type'), $request->input('size'),
         $request->input('branch_weight'), $request->input('hallway_weight'));
 
         return response()->json(['status' => 'success',
@@ -103,7 +107,7 @@ class MenuController extends Controller
 
     public function joinRoom(JoinRoomRequest $request)
     {
-        $room = $this->roomService->join($request->user(), $request->input('room_type'), 
+        $room = $this->joinRoomService->join($request->user(), $request->input('room_type'), 
         $request->input('code'));
         return response()->json(['status' => 'success',
         'message' => 'Successful connection',
