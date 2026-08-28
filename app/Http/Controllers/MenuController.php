@@ -26,16 +26,20 @@ class MenuController extends Controller
 {
     private ProfileService $profileService;
     private LeaderboardService $leaderboardService;
-    private CreateRoomService $createRoomService;
+    private MenuLocator $menuLocator;
     private JoinRoomService $joinRoomService;
     private CodeboardService $codeboardService;
 
-    public function __construct(ProfileService $profileService, LeaderboardService $leaderboardService, 
-    CreateRoomService $createRoomService, JoinRoomService $joinRoomService, CodeboardService $codeboardService)
-    {
+    public function __construct(
+        ProfileService $profileService, 
+        LeaderboardService $leaderboardService, 
+        MenuLocator $menuLocator, 
+        JoinRoomService $joinRoomService, 
+        CodeboardService $codeboardService
+        ) {
         $this->profileService = $profileService;
         $this->leaderboardService = $leaderboardService;
-        $this->createRoomService = $createRoomService;
+        $this->menuLocator = $menuLocator;
         $this->joinRoomService = $joinRoomService;
         $this->codeboardService = $codeboardService;
     }
@@ -102,7 +106,7 @@ class MenuController extends Controller
 
     public function createRoom(CreateRoomRequest $request)
     {
-        $room = $this->createRoomService->create($request->user(), $request->input('room_type'), $request->input('size'),
+        $room = $this->menuLocator->create($request->user(), $request->getRoomType(), $request->input('size'),
         $request->input('branch_weight'), $request->input('hallway_weight'));
 
         return response()->json(['status' => 'success',
@@ -112,7 +116,7 @@ class MenuController extends Controller
 
     public function joinRoom(JoinRoomRequest $request)
     {
-        $room = $this->joinRoomService->join($request->user(), $request->input('room_type'), 
+        $room = $this->joinRoomService->join($request->user(), $request->getRoomType(), 
         $request->input('code'));
         return response()->json(['status' => 'success',
         'message' => 'Successful connection',

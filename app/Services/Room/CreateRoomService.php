@@ -21,19 +21,12 @@ class CreateRoomService
         $this->codeGeneratorService = $codeGeneratorService;
     }
 
-    public function create(Profile $profile, string $room_type, int $size, float $branch_weight, float $hallway_weight): Room
+    public function create(Profile $profile, RoomType $room_type, int $size, float $branch_weight, float $hallway_weight): Room
     {
         if ($profile->player != null && $profile->player->room_id != null)
             {
                 throw new DomainException('Player in other room', 409);
             }
-
-        $room_type = match ($room_type)
-        {
-            'pvplocal' => RoomType::PvPLocal,
-            'pvppublic' => RoomType::PvPPublic,
-            'sp' => RoomType::SP,
-        };
 
         $room = $this->setupRoomAndPlayerforCreate($profile, $room_type, $size, $branch_weight, $hallway_weight);
 

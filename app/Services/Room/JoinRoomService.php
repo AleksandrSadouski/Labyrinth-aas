@@ -5,6 +5,7 @@ use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
 use Illuminate\Support\Facades\DB;
+use App\Services\Room\CreateRoomService;
 use App\Enums\RoomStatus;
 use App\Enums\RoomType;
 
@@ -12,7 +13,14 @@ use DomainException;
 
 class JoinRoomService
 {
-    public function join(Profile $profile, string $room_type, ?string $code = null): Room
+    private CreateRoomService $createRoomService;
+
+    public function __construct(CreateRoomService $createRoomService)
+    {
+        $this->createRoomService = $createRoomService;
+    }
+
+    public function join(Profile $profile, RoomType $room_type, ?string $code = null): Room
     {
         if ($profile->player != null && $profile->player->room_id != null)
             {
@@ -21,7 +29,12 @@ class JoinRoomService
 
         $room = $this->selectRoomType($profile, $room_type, $code);
 
-        if (!$room)
+        if (!$room && $room_type == RoomType::PvPPublic)
+            {
+                return $this->createRoomService->create($profile, $room_type, 
+                random_int(11, 101), random_int(0, 10)/10, random_int(0, 10)/10);
+            }
+        if (!$room && $room_type != RoomType::PvPPublic)
             {
                 throw new DomainException('Room not found', 404);
             }
@@ -39,14 +52,8 @@ class JoinRoomService
         return $room;
     }
 
-    private function selectRoomType(Profile $profile, string $room_type, ?string $code = null): Room
-    {
-        $room_type = match ($room_type)
-        {
-            'pvplocal' => RoomType::PvPLocal,
-            'pvppublic' => RoomType::PvPPublic,
-        };
-        
+    private function selectRoomType(Profile $profile, RoomType $room_type, ?string $code = null): Room
+    {      
         if ($room_type == RoomType::PvPLocal)
             {
                 $room = Room::with('players')->where('code', $code)

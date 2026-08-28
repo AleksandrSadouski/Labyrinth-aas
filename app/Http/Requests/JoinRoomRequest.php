@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\RoomType;
 
 class JoinRoomRequest extends FormRequest
 {
@@ -22,5 +23,14 @@ class JoinRoomRequest extends FormRequest
             }
         
         return $rules;
+    }
+
+    public function getRoomType(): RoomType
+    {
+        return match ($this->validated('room_type'))
+        {
+            'pvplocal' => RoomType::PvPLocal,
+            'pvppublic' => RoomType::PvPPublic,
+        };
     }
 }
