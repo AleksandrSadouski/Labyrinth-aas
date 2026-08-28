@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
+use App\Locators\MenuLocator;
 use App\Services\Menu\ProfileService;
 use App\Services\Menu\LeaderboardService;
 use App\Services\Room\CreateRoomService;

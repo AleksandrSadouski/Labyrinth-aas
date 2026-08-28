@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Locators;
+namespace App\Locators;
 
 use App\Enums\RoomType;
 use App\Models\Profile;

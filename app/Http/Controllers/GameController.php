@@ -7,7 +7,7 @@ use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
 use App\Models\Message;
-use App\Services\Locators\GameLocator;
+use App\Locators\GameLocator;
 use App\Services\Shared\PollingService;
 use App\Services\Shared\MessageService;
 use App\Http\Resources\RoomResource;
