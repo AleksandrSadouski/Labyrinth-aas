@@ -20,7 +20,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/menu/password', [MenuController::class, 'changePassword'])->middleware('throttle:1,1');
     Route::put('/menu/reset', [MenuController::class, 'resetProfile'])->middleware('throttle:1,1');
     Route::get('/menu/leaderboard', [MenuController::class, 'showLeaderboard'])->middleware('throttle:60,1');
+    Route::get('/menu/codeboard', [MenuController::class, 'showCodeboard'])->middleware('throttle:60,1');
 
+    Route::patch('/game/codeboard', [GameController::class, 'toggleCodeboard'])->middleware('throttle:60,1');
     Route::post('/game/moves', [GameController::class, 'makeMove'])->middleware('throttle:80,1');
     Route::post('/game/message', [GameController::class, 'writeMessage'])->middleware('throttle:30,1');
     Route::post('/game/exit', [GameController::class, 'exitRoom'])->middleware('throttle:30,1');

@@ -9,6 +9,7 @@ use App\Services\PvP\PvPMoveService;
 use App\Services\PvP\PvPGameLeaveService;
 use App\Services\SP\SPMoveService;
 use App\Services\SP\SPGameLeaveService;
+use App\Services\Room\CodeboardService;
 
 use DomainException;
 
@@ -18,17 +19,20 @@ class GameLocator
     private SPMoveService $spMoveService;
     private PvPGameLeaveService $pvpGameLeaveService;
     private SPGameLeaveService $spGameLeaveService;
+    private CodeboardService $codeboardService;
 
     public function __construct(
         PvPMoveService $pvpMoveService,
         SPMoveService $spMoveService,
         PvPGameLeaveService $pvpGameLeaveService,
-        SPGameLeaveService $spGameLeaveService
+        SPGameLeaveService $spGameLeaveService,
+        CodeboardService $codeboardService
     ) {
         $this->pvpMoveService = $pvpMoveService;
         $this->spMoveService = $spMoveService;
         $this->pvpGameLeaveService = $pvpGameLeaveService;
         $this->spGameLeaveService = $spGameLeaveService;
+        $this->codeboardService = $codeboardService;
     }
 
     public function move(Profile $profile, string $code, int $new_x, int $new_y): array
@@ -71,6 +75,21 @@ class GameLocator
                 return;
             case RoomType::SP:
                 throw new DomainException('Impossible: SP cannot be cancelled', 409);
+        }
+    }
+
+    public function toggleCodeboard(string $code)
+    {
+        $room = $this->detRoom($code);
+
+        switch($room->room_type)
+        {
+            case RoomType::PvPLocal:
+                return $this->codeboardService->toggleCodeboard($room);
+            case RoomType::PvPPublic:
+                throw new DomainException('Impossible: PvPPublic cannot be toggled', 409);
+            case RoomType::SP:
+                throw new DomainException('Impossible: SP cannot be toggled', 409);
         }
     }
 

@@ -26,6 +26,7 @@ class RoomResource extends JsonResource
         'status' => $this->status,
         'winner_order' => $this->winner_order,
         'draw' => $this->draw,
+        'is_on_codeboard' => $this->is_on_codeboard,
         'players' => PlayerResource::collection($this->whenLoaded('players'))];
     }
 }

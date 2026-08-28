@@ -11,6 +11,7 @@ use App\Services\Locators\GameLocator;
 use App\Services\Shared\PollingService;
 use App\Services\Shared\MessageService;
 use App\Http\Resources\RoomResource;
+use App\Http\Resources\MessageResource;
 use App\Http\Requests\MessageRequest;
 
 class GameController extends Controller
@@ -58,6 +59,14 @@ class GameController extends Controller
         return response()->json(['status' => 'success',
         'message' => 'Message sent',
         'data' => new MessageResource($message)], 200);
+    }
+
+    public function toggleCodeboard(Request $request)
+    {
+        $room = $this->gameLocator->toggleCodeboard($request->input('code'));
+        return response()->json(['status' => 'success',
+        'message' => 'Room is toggled',
+        'data' => new RoomResource($room)], 200);
     }
 
     public function checkRoom(Request $request)

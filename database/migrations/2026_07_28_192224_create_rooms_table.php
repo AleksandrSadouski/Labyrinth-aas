@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('winner_order')->nullable();
             $table->boolean('draw')->default(false);
             $table->boolean('first_finished')->default(false);
+            $table->boolean('is_on_codeboard')->default(false);
             $table->timestamps();
         });
     }

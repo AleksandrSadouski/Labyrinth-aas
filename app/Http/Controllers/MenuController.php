@@ -9,6 +9,7 @@ use App\Services\Menu\ProfileService;
 use App\Services\Menu\LeaderboardService;
 use App\Services\Room\CreateRoomService;
 use App\Services\Room\JoinRoomService;
+use App\Services\Room\CodeboardService;
 use App\Http\Requests\JoinRoomRequest;
 use App\Http\Requests\CreateRoomRequest;
 use App\Http\Requests\RenameRequest;
@@ -19,6 +20,7 @@ use App\Http\Requests\LeaderboardRequest;
 use App\Http\Resources\RoomResource;
 use App\Http\Resources\ProfileResource;
 use App\Http\Resources\LeaderboardResource;
+use App\Http\Resources\CodeboardResource;
 
 class MenuController extends Controller
 {
@@ -26,14 +28,16 @@ class MenuController extends Controller
     private LeaderboardService $leaderboardService;
     private CreateRoomService $createRoomService;
     private JoinRoomService $joinRoomService;
+    private CodeboardService $codeboardService;
 
     public function __construct(ProfileService $profileService, LeaderboardService $leaderboardService, 
-    CreateRoomService $createRoomService, JoinRoomService $joinRoomService)
+    CreateRoomService $createRoomService, JoinRoomService $joinRoomService, CodeboardService $codeboardService)
     {
         $this->profileService = $profileService;
         $this->leaderboardService = $leaderboardService;
         $this->createRoomService = $createRoomService;
         $this->joinRoomService = $joinRoomService;
+        $this->codeboardService = $codeboardService;
     }
 
     public function exitProfile(Request $request)
@@ -113,5 +117,13 @@ class MenuController extends Controller
         return response()->json(['status' => 'success',
         'message' => 'Successful connection',
         'data' => new RoomResource($room)], 200);
+    }
+
+    public function showCodeboard(Request $request)
+    {
+        $codeboard = $this->codeboardService->getCodeboard();
+        return response()->json(['status' => 'success',
+        'message' => 'Show codeboard',
+        'data' => CodeboardResource::collection($codeboard)], 200);
     }
 }

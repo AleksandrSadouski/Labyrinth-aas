@@ -72,6 +72,7 @@ class JoinRoomService
         $player->save();
 
         $room->status = RoomStatus::Active;
+        $room->is_on_codeboard = false;
         $room->save();
         $room->load('players');
         });
