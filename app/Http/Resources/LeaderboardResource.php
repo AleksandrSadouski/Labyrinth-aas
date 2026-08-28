@@ -12,6 +12,7 @@ class LeaderboardResource extends JsonResource
     {
         return [
         'name' => $this->name,
-        'max_rating' => $this->rating];
+        'max_rating' => $this->when(!empty($this->rating), $this->rating),
+        'max_sp_game_completed' => $this->when(!empty($this->sp_game_completed), $this->sp_game_completed)];
     }
 }
