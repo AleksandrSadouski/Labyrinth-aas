@@ -23,7 +23,7 @@ class PvPCheckResultService
     {
         if($player->y == $room->exit_y && $player->x == $room->exit_x)
             {
-                if($player->player_order == 2 && $room->first_finished == false)
+                if($player->player_order == 2 && $room->status != RoomStatus::First_finished)
                     {
                 $this->pvpUpdateStatsService->updateStats('win', $player, $otherPlayer, $room, $profile);
                 $this->pvpGameHistoryService->createHistory('win', $profile, $otherPlayer->profile);
@@ -33,7 +33,7 @@ class PvPCheckResultService
                 'room' => $room];
                     }
 
-                elseif($player->player_order == 2 && $room->first_finished == true)
+                elseif($player->player_order == 2 && $room->status == RoomStatus::First_finished)
                     {
                 $this->pvpUpdateStatsService->updateStats('draw', $player, $otherPlayer, $room, $profile);
                 $this->pvpGameHistoryService->createHistory('draw', $profile, $otherPlayer->profile);
@@ -45,12 +45,12 @@ class PvPCheckResultService
 
                 elseif($player->player_order == 1)
                     {
-                        $room->first_finished = true;
+                        $room->status = RoomStatus::First_finished;
                         $room->save();
                         return null;
                     }
             }
-        elseif($player->player_order == 2 && $room->first_finished == true)
+        elseif($player->player_order == 2 && $room->status == RoomStatus::First_finished)
             {
                 $this->pvpUpdateStatsService->updateStats('lose', $player, $otherPlayer, $room, $profile);
                 $this->pvpGameHistoryService->createHistory('lose', $profile, $otherPlayer->profile);
@@ -64,7 +64,7 @@ class PvPCheckResultService
 
     public function checkResultExit(Player $player, Player $otherPlayer, Room $room, Profile $profile): void
     {
-        if($room->status == RoomStatus::Active)
+        if($room->status == RoomStatus::Active || $room->status == RoomStatus::First_finished)
             {
                 $this->pvpUpdateStatsService->updateStats('lose', $player, $otherPlayer, $room, $profile);
                 $this->pvpGameHistoryService->createHistory('lose', $profile, $otherPlayer->profile);
