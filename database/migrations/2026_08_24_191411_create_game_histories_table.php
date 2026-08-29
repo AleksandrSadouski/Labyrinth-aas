@@ -13,8 +13,8 @@ return new class extends Migration
             $table->foreignId('profile_id')->constrained()->onDelete('cascade');
             $table->string('result');
             $table->string('name_opponent');
-            $table->integer('rating');
-            $table->integer('rating_opponent');
+            $table->integer('pvp_rating');
+            $table->integer('pvp_rating_opponent');
             $table->timestamps();
         });
     }

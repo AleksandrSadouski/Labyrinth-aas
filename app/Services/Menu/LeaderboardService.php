@@ -10,7 +10,7 @@ class LeaderboardService
     {
         return match($type_top)
         {
-            'rating' => ['name_top' => 'top_rating', 'current_column' => 'rating', 'limit' => 10],
+            'pvp_rating' => ['name_top' => 'top_pvp_rating', 'current_column' => 'pvp_rating', 'limit' => 10],
             'sp_game_completed' => ['name_top' => 'top_sp_game_completed', 'current_column' => 'sp_game_completed', 'limit' => 10],
         };
     }

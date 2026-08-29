@@ -11,8 +11,8 @@ class PvPGameHistoryService
         $game_history = GameHistory::create(['profile_id' => $profile->id,
         'result' => $key,
         'name_opponent' => $profile_opponent->name,
-        'rating_opponent' => $profile_opponent->rating,
-        'rating' => $profile->rating]);
+        'pvp_rating_opponent' => $profile_opponent->pvp_rating,
+        'pvp_rating' => $profile->pvp_rating]);
         $game_history->load('profile');
     }
 }

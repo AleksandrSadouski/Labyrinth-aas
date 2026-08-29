@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class GameHistory extends Model
 {
-    protected $fillable = ['profile_id', 'result', 'name_opponent', 'rating_opponent'];
+    protected $fillable = ['profile_id', 'result', 'name_opponent', 'pvp_rating_opponent', 'pvp_rating'];
     protected $casts = ['created_at' => 'datetime'];
 
     public function profile()

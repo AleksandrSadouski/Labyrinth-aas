@@ -5,10 +5,10 @@ use App\Models\Player;
 use App\Models\Room;
 use App\Models\Profile;
 
-class EloService
+class RatingService
 {
 
-    public function calcRating(string $key, int $R_A, int $R_B): int
+    public function calcEloRating(string $key, int $R_A, int $R_B): int
     {
         $E_A = 1 / (1 + 10 ** (($R_B - $R_A) / 400));
         $S = match($key){

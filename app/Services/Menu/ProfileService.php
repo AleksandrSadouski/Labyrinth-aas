@@ -76,7 +76,7 @@ class ProfileService
                 throw new DomainException('Impossible: player in room', 409);
             }
             
-        $profile->rating = 150;
+        $profile->pvp_rating = 150;
         $profile->game_total = 0;
         $profile->win_total = 0;
         $profile->draw_total = 0;

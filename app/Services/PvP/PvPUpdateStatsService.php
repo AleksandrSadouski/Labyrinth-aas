@@ -4,17 +4,17 @@ namespace App\Services\PvP;
 use App\Models\Player;
 use App\Models\Room;
 use App\Models\Profile;
-use App\Services\Shared\EloService;
+use App\Services\Shared\RatingService;
 use Illuminate\Support\Facades\DB;
 use App\Enums\RoomStatus;
 
 class PvPUpdateStatsService
 {
-    private EloService $eloService;
+    private RatingService $ratingService;
 
-    public function __construct(EloService $eloService)
+    public function __construct(RatingService $ratingService)
     {
-        $this->eloService = $eloService;
+        $this->ratingService = $ratingService;
     } 
 
     public function updateStats(string $key, Player $player, Player $otherPlayer, Room $room, Profile $profile): void
@@ -24,18 +24,18 @@ class PvPUpdateStatsService
         {
             case 'win':
                 $this->updateRoom($key, $player, $room);
-                $this->updateWinner($profile, $otherPlayer->profile->rating);
-                $this->updateLoser($otherPlayer->profile, $profile->rating);
+                $this->updateWinner($profile, $otherPlayer->profile->pvp_rating);
+                $this->updateLoser($otherPlayer->profile, $profile->pvp_rating);
             break;
             case 'lose':
                 $this->updateRoom($key, $otherPlayer, $room);
-                $this->updateWinner($otherPlayer->profile, $profile->rating);
-                $this->updateLoser($profile, $otherPlayer->profile->rating);
+                $this->updateWinner($otherPlayer->profile, $profile->pvp_rating);
+                $this->updateLoser($profile, $otherPlayer->profile->pvp_rating);
             break;
             case 'draw':
                 $this->updateRoom($key, $player, $room);
-                $this->updateDrawer($profile, $otherPlayer->profile->rating);
-                $this->updateDrawer($otherPlayer->profile, $profile->rating);
+                $this->updateDrawer($profile, $otherPlayer->profile->pvp_rating);
+                $this->updateDrawer($otherPlayer->profile, $profile->pvp_rating);
             break;
             default:
             break;
@@ -61,20 +61,20 @@ class PvPUpdateStatsService
     {
         $profileWinner->game_total++;
         $profileWinner->win_total++;
-        $profileWinner->rating = $this->eloService->calcRating('win', $profileWinner->rating, $ratingLoser);
+        $profileWinner->pvp_rating = $this->ratingService->calcEloRating('win', $profileWinner->pvp_rating, $ratingLoser);
     }
 
     public function updateLoser(Profile $profileLoser, int $ratingWinner): void
     {
         $profileLoser->game_total++;
         $profileLoser->lose_total++;
-        $profileLoser->rating = $this->eloService->calcRating('lose', $profileLoser->rating, $ratingWinner);
+        $profileLoser->pvp_rating = $this->ratingService->calcEloRating('lose', $profileLoser->pvp_rating, $ratingWinner);
     }
 
     public function updateDrawer(Profile $profileDrawer, int $ratingOtherDrawer): void
     {
         $profileDrawer->game_total++;
         $profileDrawer->draw_total++;
-        $profileDrawer->rating = $this->eloService->calcRating('draw', $profileDrawer->rating, $ratingOtherDrawer);
+        $profileDrawer->pvp_rating = $this->ratingService->calcEloRating('draw', $profileDrawer->pvp_rating, $ratingOtherDrawer);
     }
 }
