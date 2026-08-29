@@ -59,22 +59,22 @@ class PvPUpdateStatsService
 
     public function updateWinner(Profile $profileWinner, int $ratingLoser): void
     {
-        $profileWinner->game_total++;
-        $profileWinner->win_total++;
+        $profileWinner->pvp_game_total++;
+        $profileWinner->pvp_win_total++;
         $profileWinner->pvp_rating = $this->ratingService->calcEloRating('win', $profileWinner->pvp_rating, $ratingLoser);
     }
 
     public function updateLoser(Profile $profileLoser, int $ratingWinner): void
     {
-        $profileLoser->game_total++;
-        $profileLoser->lose_total++;
+        $profileLoser->pvp_game_total++;
+        $profileLoser->pvp_lose_total++;
         $profileLoser->pvp_rating = $this->ratingService->calcEloRating('lose', $profileLoser->pvp_rating, $ratingWinner);
     }
 
     public function updateDrawer(Profile $profileDrawer, int $ratingOtherDrawer): void
     {
-        $profileDrawer->game_total++;
-        $profileDrawer->draw_total++;
+        $profileDrawer->pvp_game_total++;
+        $profileDrawer->pvp_draw_total++;
         $profileDrawer->pvp_rating = $this->ratingService->calcEloRating('draw', $profileDrawer->pvp_rating, $ratingOtherDrawer);
     }
 }

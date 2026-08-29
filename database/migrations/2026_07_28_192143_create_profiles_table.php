@@ -14,10 +14,10 @@ return new class extends Migration
             $table->string('password');
             $table->integer('pvp_rating')->default(150);
             $table->integer('sp_rating')->default(0);
-            $table->integer('game_total')->default(0);
-            $table->integer('win_total')->default(0);
-            $table->integer('draw_total')->default(0);
-            $table->integer('lose_total')->default(0);
+            $table->integer('pvp_game_total')->default(0);
+            $table->integer('pvp_win_total')->default(0);
+            $table->integer('pvp_draw_total')->default(0);
+            $table->integer('pvp_lose_total')->default(0);
             $table->integer('sp_game_completed')->default(0);
             $table->timestamps();
         });
