@@ -38,10 +38,6 @@ class JoinRoomService
             {
                 throw new DomainException('Room not found', 404);
             }
-        if ($room->status != RoomStatus::Waiting)
-            {
-                throw new DomainException('Room has already started the game', 409);
-            }
         if ($room->players->count() >= Room::MAX_PLAYERS)
             {
                 throw new DomainException('Room is occupied', 409);
@@ -57,11 +53,12 @@ class JoinRoomService
         if ($room_type == RoomType::PvPLocal)
             {
                 $room = Room::with('players')->where('code', $code)
-                ->where('room_type', RoomType::PvPLocal)->first();
+                ->where('room_type', RoomType::PvPLocal)->where('status', RoomStatus::Waiting)->first();
             }
         elseif ($room_type == RoomType::PvPPublic && $code == null)
             {
                 $room = Room::with('players')->where('room_type', RoomType::PvPPublic)
+                ->where('status', RoomStatus::Waiting)
                 ->inRandomOrder()->first();
             }
         return $room;
