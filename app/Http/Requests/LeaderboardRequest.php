@@ -14,6 +14,6 @@ class LeaderboardRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['type_top' => 'required|in:sp_game_completed,pvp_rating'];
+        return ['type_top' => 'required|in:sp_rating,pvp_rating'];
     }
 }

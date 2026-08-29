@@ -77,6 +77,7 @@ class ProfileService
             }
             
         $profile->pvp_rating = 150;
+        $profile->sp_rating = 0;
         $profile->game_total = 0;
         $profile->win_total = 0;
         $profile->draw_total = 0;

@@ -20,4 +20,11 @@ class RatingService
         $R_new = $R_A + $K * ($S - $E_A);
         return round($R_new);
     }
+
+    public function calcSadovskyRating(int $R_old, int $sp_game_completed, int $size, float $branch_weight, float $hallway_weight): int
+    {
+        $C = ($size/10) * (1 + $branch_weight) * (1 + $hallway_weight);
+        $R_new = $R_old + $C * (1 + 10 / (10 + $sp_game_completed));
+        return round($R_new);
+    }
 }
