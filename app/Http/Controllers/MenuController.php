@@ -5,7 +5,6 @@ use Illuminate\Http\Request;
 use App\Models\Profile;
 use App\Models\Player;
 use App\Models\Room;
-use App\Locators\MenuLocator;
 use App\Services\Menu\ProfileService;
 use App\Services\Menu\LeaderboardService;
 use App\Services\Room\CreateRoomService;
@@ -34,13 +33,13 @@ class MenuController extends Controller
     public function __construct(
         ProfileService $profileService, 
         LeaderboardService $leaderboardService, 
-        MenuLocator $menuLocator, 
+        CreateRoomService $createRoomService, 
         JoinRoomService $joinRoomService, 
         CodeboardService $codeboardService
         ) {
         $this->profileService = $profileService;
         $this->leaderboardService = $leaderboardService;
-        $this->menuLocator = $menuLocator;
+        $this->createRoomService = $createRoomService;
         $this->joinRoomService = $joinRoomService;
         $this->codeboardService = $codeboardService;
     }
@@ -107,7 +106,7 @@ class MenuController extends Controller
 
     public function createRoom(CreateRoomRequest $request)
     {
-        $room = $this->menuLocator->create($request->user(), $request->getRoomType(), $request->input('size'),
+        $room = $this->createRoomService->create($request->user(), $request->getRoomType(), $request->input('size'),
         $request->input('branch_weight'), $request->input('hallway_weight'));
 
         return response()->json(['status' => 'success',
